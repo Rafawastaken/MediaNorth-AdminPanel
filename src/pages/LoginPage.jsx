@@ -102,7 +102,7 @@ const LoginPage = () => {
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-lg bg-[var(--light-blue)] py-3 text-sm font-medium text-white hover:bg-[var(--light-blue)]/90 disabled:opacity-60"
+                className="w-full rounded-lg bg-[var(--light-blue)] py-3 text-sm font-medium text-white hover:bg-[var(--light-blue)]/90 disabled:opacity-60 cursor-pointer transition-all duration-300"
             >
               {loading ? 'A autenticar…' : 'Entrar'}
             </button>

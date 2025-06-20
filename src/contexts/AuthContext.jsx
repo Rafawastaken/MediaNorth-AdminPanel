@@ -1,16 +1,35 @@
-// src/contexts/AuthContext.jsx
-// -----------------------------------------------------------
-//  🔐  Provedor de autenticação Supabase + rota protegida
-// -----------------------------------------------------------
 import {createContext, useContext, useEffect, useState} from 'react';
 import {Navigate} from 'react-router-dom';
 import {supabase} from '../libs/supabase';
 import Loading from '../components/ui/Loading.jsx';
 
 /* ------------------------------------------------------------------
+ * Helper – normaliza o objecto user
+ * ----------------------------------------------------------------*/
+const formatUser = (rawUser) => {
+  if (!rawUser) return null;
+
+  const meta = rawUser.user_metadata || {};
+  const email = rawUser.email || '';
+
+  /* Se não houver nome nos metadados, usa a parte antes do @ */
+  const fullName = meta.full_name || meta.name || email.split('@')[0] ||
+      'Utilizador';
+
+  return {
+    ...rawUser,
+    fullName,
+    email, // mantém também o email direto
+  };
+};
+
+/* ------------------------------------------------------------------
  * Contexto
  * ----------------------------------------------------------------*/
-const AuthContext = createContext({user: null, loading: true});
+const AuthContext = createContext({
+  user: null, loading: true, signOut: () => {
+  },
+});
 
 export const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);
@@ -22,15 +41,16 @@ export const AuthProvider = ({children}) => {
       const {
         data: {session},
       } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
+      setUser(formatUser(session?.user));
       setLoading(false);
     };
 
     getInitial();
 
     const {data: listener} = supabase.auth.onAuthStateChange(
-        (_event, session) => setUser(session?.user ?? null),
-    );
+        (_event, session) => {
+          setUser(formatUser(session?.user));
+        });
 
     return () => listener.subscription.unsubscribe();
   }, []);
@@ -47,15 +67,12 @@ export const AuthProvider = ({children}) => {
 export const useAuth = () => useContext(AuthContext);
 
 /* ------------------------------------------------------------------
- * Rota protegida – redirecciona para /login se não houver sessão
+ * Rota protegida – redireciona para /login se não houver sessão
  * ----------------------------------------------------------------*/
 export const ProtectedRoute = ({children}) => {
   const {user, loading} = useAuth();
 
-  if (loading)
-    return (
-        <Loading full={true} message="Iniciar Sessão"/>
-    );
+  if (loading) return <Loading full message="A carregar…"/>;
 
   return user ? children : <Navigate to="/login" replace/>;
 };
