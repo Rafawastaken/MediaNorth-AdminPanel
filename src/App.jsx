@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import {AuthProvider, ProtectedRoute} from './contexts/AuthContext.jsx';
 import {Toaster} from 'react-hot-toast';
+import AddSitePage from './pages/AddSitePage.jsx';
 
 const App = () => (
     <BrowserRouter>
@@ -19,6 +20,7 @@ const App = () => (
               }
           >
             <Route path="/" element={<HomePage/>}/>
+            <Route path="/locais/novo" element={<AddSitePage/>}/>
           </Route>
 
           <Route path="/login" element={<LoginPage/>}/>
