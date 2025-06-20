@@ -4,24 +4,70 @@ import {
   AddSiteFormInputCol,
   AddSiteFormInputRow,
 } from "./ui/AddSiteFormInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../../libs/supabase";
+import { toast } from "react-hot-toast";
+import Loading from "../ui/Loading";
 
 const AddSiteForm = () => {
+  // Form values
   const [siteName, setSiteName] = useState("");
   const [vatNumber, setVatNumber] = useState("");
   const [siteAddress, setSiteAddress] = useState("");
   const [siteType, setSiteType] = useState("");
-
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
-
   const [contractType, setContractType] = useState("");
   const [contractValue, setContractValue] = useState("");
   const [contractObservations, setContractObservations] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  // submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // mostra spinner/desativa botão
+
+    // Mapeamento 1 ↔ 1 com a tabela `site`
+    const payload = {
+      name: siteName.trim(), // character varying
+      vat: vatNumber.trim() || null, // text
+      address: siteAddress.trim(), // text
+      site_type: siteType, // character varying
+      contact_name: contactName.trim(), // character varying
+      contact_phone: contactPhone.trim(), // character varying
+      contact_email: contactEmail.trim(), // character varying
+      contract_type: contractType, // text
+      contract_value: contractValue || null, // character varying
+      observations: contractObservations || null, // text
+    };
+
+    const { data, error } = await supabase
+      .from("site")
+      .insert(payload) // não precisa do []
+      .select("id") // só queremos o id
+      .single(); // devolve logo um object, não um array
+
+    if (error) {
+      toast.error(`Erro ao criar localização: ${error.message}`);
+    } else {
+      toast.success(
+        `Localização “${siteName}” criada com sucesso (id: ${data.id})`
+      );
+      navigate("/locais");
+    }
+
+    setLoading(false);
+  };
+
+  if (loading) {
+    return <Loading message="A Guardar Sitio..." full />;
+  }
 
   return (
-    <form className={"flex flex-col gap-5 mt-5 w-full"}>
+    <form className={"flex flex-col gap-5 mt-5 w-full"} onSubmit={handleSubmit}>
       {/*--Site Information ---------------------------------- */}
       <div
         className={
@@ -183,7 +229,7 @@ const AddSiteForm = () => {
         </Link>
         <button
           type="submit"
-          className="flex px-4 py-3 bg-blue-600 text-white items-center gap-2 rounded-md font-semibold hover:bg-blue-700 transition-all duration-300 cursor-pointer"
+          className="flex px-4 py-3 bg-blue-600 text-white items-center gap-2 rounded-md font-semibold hover:bg-blue-700 transition-all duration-300 cursor-pointer "
         >
           <Save size={16} />
           Adicionar Local
