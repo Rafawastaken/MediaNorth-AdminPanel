@@ -1,19 +1,19 @@
-import {HeadingStandard} from '../components/ui/Headings.jsx';
-import StatisticsBlock from '../components/statistics/StatisticsBlock.jsx';
-import WarningsBlock from '../components/warnings/WarningsBlock.jsx';
-import LogsTableBlock from '../components/logs/LogsTableBlock.jsx';
+import { HeadingStandard } from "../components/ui/Headings.jsx";
+import StatisticsBlock from "../components/blocks/StatisticsBlock.jsx";
+import WarningsBlock from "../components/blocks/WarningsBlock.jsx";
+import LogsTableBlock from "../components/logs/LogsTableBlock.jsx";
 
 const HomePage = () => {
   return (
-      <div>
-        <HeadingStandard
-            title={'Dashboard'}
-            subtitle={'Visão geral do sistema de gestão de anúncios'}
-        />
-        <StatisticsBlock/>
-        <WarningsBlock/>
-        <LogsTableBlock/>
-      </div>
+    <div>
+      <HeadingStandard
+        title={"Dashboard"}
+        subtitle={"Visão geral do sistema de gestão de anúncios"}
+      />
+      <StatisticsBlock />
+      <WarningsBlock />
+      <LogsTableBlock />
+    </div>
   );
 };
 

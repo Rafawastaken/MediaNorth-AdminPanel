@@ -29,7 +29,7 @@ const Loading = ({
 
   if (full) {
     return (
-      <div className="flex h-150 w-auto items-center justify-center ">
+      <div className="flex h-150 w-auto items-center justify-center">
         {spinner}
       </div>
     );

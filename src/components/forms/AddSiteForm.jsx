@@ -4,10 +4,10 @@ import {
   AddSiteFormInputCol,
   AddSiteFormInputRow,
 } from "./ui/AddSiteFormInput";
-import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../../libs/supabase";
-import { toast } from "react-hot-toast";
 import Loading from "../ui/Loading";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { useSites } from "../../hooks/useSites";
 
 const AddSiteForm = () => {
   // Form values
@@ -23,43 +23,37 @@ const AddSiteForm = () => {
   const [contractObservations, setContractObservations] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { addSite } = useSites();
+
   const navigate = useNavigate();
 
   // submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // mostra spinner/desativa botão
+    setLoading(true);
 
-    // Mapeamento 1 ↔ 1 com a tabela `site`
     const payload = {
-      name: siteName.trim(), // character varying
-      vat: vatNumber.trim() || null, // text
-      address: siteAddress.trim(), // text
-      site_type: siteType, // character varying
-      contact_name: contactName.trim(), // character varying
-      contact_phone: contactPhone.trim(), // character varying
-      contact_email: contactEmail.trim(), // character varying
-      contract_type: contractType, // text
-      contract_value: contractValue || null, // character varying
-      observations: contractObservations || null, // text
+      name: siteName.trim(),
+      vat: vatNumber.trim() || null,
+      address: siteAddress.trim(),
+      site_type: siteType,
+      contact_name: contactName.trim(),
+      contact_phone: contactPhone.trim(),
+      contact_email: contactEmail.trim(),
+      contract_type: contractType,
+      contract_value: contractValue || null,
+      observations: contractObservations || null,
     };
 
-    const { data, error } = await supabase
-      .from("site")
-      .insert(payload) // não precisa do []
-      .select("id") // só queremos o id
-      .single(); // devolve logo um object, não um array
-
-    if (error) {
-      toast.error(`Erro ao criar localização: ${error.message}`);
-    } else {
-      toast.success(
-        `Localização “${siteName}” criada com sucesso (id: ${data.id})`
-      );
+    try {
+      await addSite(payload);
+      toast.success(`Localização “${siteName}” criada com sucesso`);
       navigate("/locais");
+    } catch (err) {
+      toast.error(`Erro ao criar localização: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   if (loading) {
