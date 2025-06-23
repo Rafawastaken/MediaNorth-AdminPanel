@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { BookPlus, ReceiptEuro, UserPlus, Save } from "lucide-react";
-import {
-  AddSiteFormInputCol,
-  AddSiteFormInputRow,
-} from "./ui/AddSiteFormInput";
+import { FormInputCol, FormInputRow } from "./ui/Input";
 import Loading from "../ui/Loading";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -75,7 +72,7 @@ const AddSiteForm = () => {
 
         <div className="flex w-full gap-3 mt-2">
           {/*--Nome do Local ---------------------------------- */}
-          <AddSiteFormInputCol
+          <FormInputCol
             value={siteName}
             onChange={setSiteName}
             label={"Nome do Local *"}
@@ -83,7 +80,7 @@ const AddSiteForm = () => {
             required={true}
           />
           {/*--Nif ---------------------------------- */}
-          <AddSiteFormInputCol
+          <FormInputCol
             value={vatNumber}
             onChange={setVatNumber}
             label={"NIF"}
@@ -92,7 +89,7 @@ const AddSiteForm = () => {
           />
         </div>
         {/*--Morada do Local ---------------------------------- */}
-        <AddSiteFormInputRow
+        <FormInputRow
           value={siteAddress}
           onChange={setSiteAddress}
           label={"Morada *"}
@@ -137,7 +134,7 @@ const AddSiteForm = () => {
         {/*--Contact Name Contact Email ---------------------------------- */}
         <div className="flex w-full gap-3 mt-2">
           {/*--Contact Name ---------------------------------- */}
-          <AddSiteFormInputCol
+          <FormInputCol
             value={contactName}
             onChange={setContactName}
             placeholder={"Nome do responsável"}
@@ -145,7 +142,7 @@ const AddSiteForm = () => {
             required={true}
           />
           {/*--Contact Phone number  ---------------------------------- */}
-          <AddSiteFormInputCol
+          <FormInputCol
             value={contactPhone}
             onChange={setContactPhone}
             placeholder={"Contacto de Responsável"}
@@ -154,7 +151,7 @@ const AddSiteForm = () => {
           />
         </div>
 
-        <AddSiteFormInputRow
+        <FormInputRow
           value={contactEmail}
           onChange={setContactEmail}
           label={"Email *"}
@@ -197,7 +194,7 @@ const AddSiteForm = () => {
           </div>
 
           {/*--Contact Value ---------------------------------- */}
-          <AddSiteFormInputCol
+          <FormInputCol
             label={"Valor Mensal"}
             onChange={setContractValue}
             value={contractValue}
@@ -205,7 +202,7 @@ const AddSiteForm = () => {
           />
         </div>
         {/*--Contact Obs ---------------------------------- */}
-        <AddSiteFormInputRow
+        <FormInputRow
           value={contractObservations}
           onChange={setContractObservations}
           label={"Observações"}

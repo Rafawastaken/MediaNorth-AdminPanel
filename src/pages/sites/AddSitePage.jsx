@@ -7,6 +7,7 @@ const AddSitePage = () => {
       <HeadingStandardBack
         title={"Adicionar Novo Local"}
         subtitle={"Preencha as informações do novo local/ponto de exibição"}
+        path="/sites"
       />
       <AddSiteForm />
     </div>

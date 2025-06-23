@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { HeadingButtonAndBack } from "../../components/ui/Headings";
 import { useSiteWithDevices } from "../../hooks/useSiteWithDevices";
 import Loading from "../../components/ui/Loading";
+import { toast } from "react-hot-toast";
 
 const SiteTvPage = () => {
   const { idSite } = useParams();
@@ -20,7 +21,7 @@ const SiteTvPage = () => {
       <HeadingButtonAndBack
         title={`TVs do ${site.name}`}
         subtitle={site.address}
-        buttonPath="/adicionar"
+        buttonPath={`/sites/${idSite}/devices/add`}
         buttonText="Adicionar TV"
         buttonBackPath="/locais"
       />

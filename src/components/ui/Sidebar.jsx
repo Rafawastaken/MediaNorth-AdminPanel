@@ -136,10 +136,10 @@ const Sidebar = ({ collapsed = false }) => {
           collapsed={collapsed}
           defaultOpen
         >
-          <Item icon={Plus} to="/locais/novo" collapsed={collapsed}>
+          <Item icon={Plus} to="/sites/add" collapsed={collapsed}>
             Adicionar Local
           </Item>
-          <Item icon={List} to="/locais" collapsed={collapsed}>
+          <Item icon={List} to="/sites" collapsed={collapsed}>
             Lista de Locais
           </Item>
         </Section>

@@ -148,7 +148,7 @@ export default function SiteCard({ site }) {
           <Eye size={16} /> Ver
         </Link>
         <Link
-          to={`/locais/${site.id}/devices`}
+          to={`/sites/${site.id}/devices`}
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border-1 border-gray-200 px-4 py-2 text-sm hover:bg-slate-50"
         >
           <Tv2 size={16} /> TVs

@@ -42,7 +42,7 @@ export default function SitePage() {
       <HeadingButton
         title="Locais/Pontos"
         subtitle="Gerir locais e pontos de exibição"
-        path="/locais/novo"
+        path="/sites/add"
         buttonText="Adicionar"
       />
       <SearchSite

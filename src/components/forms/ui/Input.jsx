@@ -1,5 +1,5 @@
 // AddSiteFormInput.jsx
-export const AddSiteFormInputCol = ({
+export const FormInputCol = ({
   label,
   placeholder,
   value,
@@ -26,7 +26,7 @@ export const AddSiteFormInputCol = ({
   );
 };
 
-export const AddSiteFormInputRow = ({
+export const FormInputRow = ({
   label,
   placeholder,
   value,

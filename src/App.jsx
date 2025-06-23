@@ -26,12 +26,20 @@ const App = () => (
             </ProtectedRoute>
           }
         >
+          {/* Standard */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/locais" element={<SitePage />} />
-          <Route path="/locais/novo" element={<AddSitePage />} />
-          <Route path="/locais/:idSite/devices" element={<SiteTvPage />} />
+
+          {/* Sites */}
+          <Route path="/sites" element={<SitePage />} />
+          <Route path="/sites/add" element={<AddSitePage />} />
+          <Route path="/sites/:idSite/devices" element={<SiteTvPage />} />
+          <Route
+            path="/sites/:idSite/devices/add"
+            element={<AddTvSitePage />}
+          />
         </Route>
 
+        {/* Auth/Public */}
         <Route path="/login" element={<LoginPage />} />
       </Routes>
     </AuthProvider>
