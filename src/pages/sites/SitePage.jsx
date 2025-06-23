@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
+import { useSites } from "../../hooks/useSites";
 import { toast } from "react-hot-toast";
-import Loading from "../../components/ui/Loading.jsx";
 import { HeadingButton } from "../../components/ui/Headings.jsx";
+import Loading from "../../components/ui/Loading.jsx";
 import SearchSite from "../../components/forms/ui/SearchSite.jsx";
 import SiteListBlock from "../../components/blocks/SiteListBlock.jsx";
-import { useSites } from "../../hooks/useSites";
+import NoResults from "../../components/ui/NoResults.jsx";
 
 export default function SitePage() {
   /* 1) hooks SEMPRE no topo */
@@ -44,22 +45,19 @@ export default function SitePage() {
         path="/locais/novo"
         buttonText="Adicionar"
       />
-
       <SearchSite
         term={term}
         onTermChange={setTerm}
         status={status}
         onStatusChange={setStatus}
       />
-      {filteredSites.length > 0 ? (
+      {filteredSites.length > 0 && sites.length !== 0 ? (
         <SiteListBlock sites={filteredSites} />
       ) : (
-        <div className="flex flex-col items-center justify-center min-h-[40vh] gap-3">
-          <h1 className="text-3xl font-semibold">Sem sites a mostrar</h1>
-          <p className="text-slate-500">
-            Ajuste o termo de pesquisa ou filtros.
-          </p>
-        </div>
+        <NoResults
+          title={"Sem locais a mostrar"}
+          message={"Ajuste o termo de pesquisa ou filtros"}
+        />
       )}
     </div>
   );
