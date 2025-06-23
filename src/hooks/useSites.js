@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { supabase } from "../libs/supabase";
+import {useCallback, useEffect, useState} from 'react';
+import {supabase} from '../libs/supabase';
 
 /**
  * Hook para ler, adicionar ou refazer a cache de sites.
@@ -13,38 +13,43 @@ import { supabase } from "../libs/supabase";
  * }
  */
 export function useSites() {
-    const [sites, setSites] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [sites, setSites] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    /** Lê todos os sites activos */
-    const fetchSites = useCallback(async () => {
-        setLoading(true);
-        setError(null);
+  /** Lê todos os sites */
+  const fetchSites = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-        const { data, error } = await supabase
-            .from("site")
-            .select("*")
-            .order("created_at", { ascending: false });
+    const {data, error} = await supabase.from('site').
+    select('*').
+    order('created_at', {ascending: false});
 
-        if (error) setError(error);
-        else setSites(data);
+    if (error) setError(error);
+    else setSites(data);
 
-        setLoading(false);
-    }, []);
+    setLoading(false);
+  }, []);
 
-    /** Insere um novo site e faz re-fetch */
-    const addSite = useCallback(async (payload) => {
-        const { error } = await supabase
-            .from("site")
-            .insert(payload);
+  /** Insere um novo site e faz re-fetch */
+  const addSite = useCallback(async (payload) => {
+    const {error} = await supabase.from('site').insert(payload);
 
-        if (error) throw error;        // componente decide como mostrar
-        await fetchSites();            // actualiza cache local
-    }, [fetchSites]);
+    if (error) throw error;        // componente decide como mostrar
+    await fetchSites();            // actualiza cache local
+  }, [fetchSites]);
 
-    // Primeiro carregamento
-    useEffect(() => { fetchSites(); }, [fetchSites]);
+  // Primeiro carregamento
+  useEffect(() => {
+    fetchSites();
+  }, [fetchSites]);
 
-    return { sites, loading, error, addSite, refetch: fetchSites };
+  return {
+    sites,
+    loading,
+    error,
+    addSite,
+    refetch: fetchSites,
+  };
 }

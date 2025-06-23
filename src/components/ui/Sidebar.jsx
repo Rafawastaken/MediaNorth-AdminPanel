@@ -119,7 +119,7 @@ const Sidebar = ({ collapsed = false }) => {
           collapsed={collapsed}
           defaultOpen
         >
-          <Item icon={MonitorOff} to="/tvs-inativas" collapsed={collapsed}>
+          <Item icon={MonitorOff} to="/inactive-devices" collapsed={collapsed}>
             TVs Inativas
           </Item>
           <Item icon={CalendarClock} to="/anuncios-fim" collapsed={collapsed}>
@@ -130,7 +130,12 @@ const Sidebar = ({ collapsed = false }) => {
           </Item>
         </Section>
 
-        <Section icon={MapPin} label="Locais/Pontos" collapsed={collapsed}>
+        <Section
+          icon={MapPin}
+          label="Locais/Pontos"
+          collapsed={collapsed}
+          defaultOpen
+        >
           <Item icon={Plus} to="/locais/novo" collapsed={collapsed}>
             Adicionar Local
           </Item>
@@ -139,7 +144,12 @@ const Sidebar = ({ collapsed = false }) => {
           </Item>
         </Section>
 
-        <Section icon={Users} label="Clientes" collapsed={collapsed}>
+        <Section
+          icon={Users}
+          label="Clientes"
+          collapsed={collapsed}
+          defaultOpen
+        >
           <Item icon={Plus} to="/clientes/novo" collapsed={collapsed}>
             Novo Cliente
           </Item>
@@ -148,7 +158,7 @@ const Sidebar = ({ collapsed = false }) => {
           </Item>
         </Section>
 
-        <Section icon={Store} label="Revenda" collapsed={collapsed}>
+        <Section icon={Store} label="Revenda" collapsed={collapsed} defaultOpen>
           <Item icon={Plus} to="/revenda/novo" collapsed={collapsed}>
             Novo Canal
           </Item>
