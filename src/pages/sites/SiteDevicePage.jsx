@@ -1,12 +1,12 @@
 import { useParams } from "react-router-dom";
 import { HeadingButtonAndBack } from "../../components/ui/Headings";
-import { useSiteWithDevices } from "../../hooks/useSiteWithDevices";
+import { useSiteDetailsWithId } from "../../hooks/useSiteDetailsWithId";
 import Loading from "../../components/ui/Loading";
 import { toast } from "react-hot-toast";
 
-const SiteTvPage = () => {
+const SiteDevicePage = () => {
   const { idSite } = useParams();
-  const { site, devices, loading, error } = useSiteWithDevices(idSite);
+  const { site, devices, loading, error } = useSiteDetailsWithId(idSite);
 
   if (loading) {
     return <Loading message="Carregar TVs..." />;
@@ -23,10 +23,10 @@ const SiteTvPage = () => {
         subtitle={site.address}
         buttonPath={`/sites/${idSite}/devices/add`}
         buttonText="Adicionar TV"
-        buttonBackPath="/locais"
+        buttonBackPath="/sites"
       />
     </>
   );
 };
 
-export default SiteTvPage;
+export default SiteDevicePage;

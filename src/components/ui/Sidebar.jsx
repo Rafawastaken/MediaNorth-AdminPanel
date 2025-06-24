@@ -120,7 +120,7 @@ const Sidebar = ({ collapsed = false }) => {
           defaultOpen
         >
           <Item icon={MonitorOff} to="/inactive-devices" collapsed={collapsed}>
-            TVs Inativas
+            Dispositivos Inativas
           </Item>
           <Item icon={CalendarClock} to="/anuncios-fim" collapsed={collapsed}>
             Anúncios a Terminar

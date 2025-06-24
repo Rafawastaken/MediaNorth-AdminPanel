@@ -45,7 +45,7 @@ const AddSiteForm = () => {
     try {
       await addSite(payload);
       toast.success(`Localização “${siteName}” criada com sucesso`);
-      navigate("/locais");
+      navigate("/sites");
     } catch (err) {
       toast.error(`Erro ao criar localização: ${err.message}`);
     } finally {

@@ -1,15 +1,15 @@
 import { useMemo, useState } from "react";
-import { useSites } from "../../hooks/useSites";
 import { toast } from "react-hot-toast";
-import { HeadingButton } from "../../components/ui/Headings.jsx";
-import Loading from "../../components/ui/Loading.jsx";
-import SearchSite from "../../components/forms/ui/SearchSite.jsx";
-import SiteListBlock from "../../components/blocks/SiteListBlock.jsx";
-import NoResults from "../../components/ui/NoResults.jsx";
+import { HeadingButton } from "../../components/ui/Headings";
+import Loading from "../../components/ui/Loading";
+import SearchSite from "../../components/forms/ui/SearchSite";
+import SiteListBlock from "../../components/blocks/SiteListBlock";
+import NoResults from "../../components/ui/NoResults";
+import { useSitesSummary } from "../../hooks/useSitesSummary";
 
 export default function SitePage() {
-  /* 1) hooks SEMPRE no topo */
-  const { sites, loading, error } = useSites();
+  const { sites, loading, error } = useSitesSummary();
+
   const [term, setTerm] = useState("");
   const [status, setStatus] = useState("all");
 
@@ -31,12 +31,8 @@ export default function SitePage() {
   }, [sites, term, status]);
 
   if (loading) return <Loading message="A carregar locais…" full />;
+  if (error) toast.error(`Erro ao carregar locais: ${error.message}`);
 
-  if (error) {
-    toast.error(`Erro ao carregar locais: ${error.message}`);
-  }
-
-  /* 3) render normal */
   return (
     <div className="flex flex-col gap-3">
       <HeadingButton
@@ -45,18 +41,20 @@ export default function SitePage() {
         path="/sites/add"
         buttonText="Adicionar"
       />
+
       <SearchSite
         term={term}
         onTermChange={setTerm}
         status={status}
         onStatusChange={setStatus}
       />
-      {filteredSites.length > 0 && sites.length !== 0 ? (
+
+      {filteredSites.length ? (
         <SiteListBlock sites={filteredSites} />
       ) : (
         <NoResults
-          title={"Sem locais a mostrar"}
-          message={"Ajuste o termo de pesquisa ou filtros"}
+          title="Sem locais a mostrar"
+          message="Ajuste o termo de pesquisa ou filtros."
         />
       )}
     </div>

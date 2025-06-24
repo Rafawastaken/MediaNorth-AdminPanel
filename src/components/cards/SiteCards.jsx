@@ -10,10 +10,6 @@ export default function SiteCard({ site }) {
     contractType[site.contract_type] ?? contractType.other;
   const isActive = site.active ?? true;
 
-  const totalDevices = 8;
-  const activeDevices = 7;
-  const offDevices = 1;
-
   return (
     <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-200">
       {/* 1-a linha: Avatar + título + estado */}
@@ -126,15 +122,17 @@ export default function SiteCard({ site }) {
       {/* Estatísticas placeholders */}
       <div className="grid grid-cols-3 text-center text-sm">
         <div>
-          <p className="text-blue-700 font-bold text-lg">{totalDevices}</p>
+          <p className="text-blue-700 font-bold text-lg">{site.totalDevices}</p>
           <span className="text-slate-500">Total TVs</span>
         </div>
         <div>
-          <p className="text-green-700 font-bold text-lg">{activeDevices}</p>
+          <p className="text-green-700 font-bold text-lg">
+            {site.activeDevices}
+          </p>
           <span className="text-slate-500">Ativas</span>
         </div>
         <div>
-          <p className="text-red-600 font-bold text-lg">{offDevices}</p>
+          <p className="text-red-600 font-bold text-lg">{site.offDevices}</p>
           <span className="text-slate-500">Inativas</span>
         </div>
       </div>
@@ -142,7 +140,7 @@ export default function SiteCard({ site }) {
       {/* Ações */}
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <Link
-          to={`/locais/${site.id}`}
+          to={`/sites/${site.id}`}
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border-1 border-gray-200 px-4 py-2 text-sm hover:bg-slate-50"
         >
           <Eye size={16} /> Ver

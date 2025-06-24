@@ -1,19 +1,58 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Lock, UserRoundPen, Save, Clock } from "lucide-react";
+
 import { FormInputCol, FormInputRow } from "./ui/Input";
+import Loading from "../ui/Loading";
 import SchedulePicker from "./ui/SchedulePicker";
 
-const AddTvSiteForm = ({ idSite }) => {
+import { useSiteDetailsWithId } from "../../hooks/useSiteDetailsWithId";
+
+const AddDeviceSiteForm = ({ idSite }) => {
+  const { addDevice } = useSiteDetailsWithId(idSite);
+  const navigate = useNavigate();
+
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [resolution, setResolution] = useState("");
   const [location, setLocation] = useState("");
-  const [schedule, setSchedule] = useState("");
+  const [schedule, setSchedule] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!login || !password || !name || !location) {
+      toast.error("Preenche todos os campos obrigatórios.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await addDevice({
+        login,
+        password,
+        name,
+        resolution,
+        location,
+        scheduleObj: schedule,
+      });
+
+      toast.success("Dispositivo adicionado com sucesso!");
+      navigate(`/sites/${idSite}/devices`);
+    } catch (err) {
+      toast.error(`Erro: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <Loading message="A guardar dispositivo…" full />;
 
   return (
-    <form className={"flex flex-col gap-5 mt-5 w-full"}>
+    <form className={"flex flex-col gap-5 mt-5 w-full"} onSubmit={handleSubmit}>
       {/* Dados de acesso */}
       <div
         className={
@@ -106,4 +145,4 @@ const AddTvSiteForm = ({ idSite }) => {
   );
 };
 
-export default AddTvSiteForm;
+export default AddDeviceSiteForm;
