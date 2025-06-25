@@ -49,6 +49,7 @@ export function useSiteDetailsWithId(idSite) {
     setSite({ ...data, device: undefined });
     setDevices(devicesWithPlaylist);
     setLoading(false);
+    console.log(data)
   }, [idSite]);
 
   useEffect(() => { if (idSite) fetchData(); }, [idSite, fetchData]);

@@ -3,6 +3,8 @@ import { HeadingButtonAndBack } from "../../components/ui/Headings";
 import { useSiteDetailsWithId } from "../../hooks/useSiteDetailsWithId";
 import Loading from "../../components/ui/Loading";
 import { toast } from "react-hot-toast";
+import DeviceStatisticBlock from "../../components/blocks/DeviceStatisticBlock";
+import DevicesTable from "../../components/tables/DevicesTable";
 
 const SiteDevicePage = () => {
   const { idSite } = useParams();
@@ -17,7 +19,7 @@ const SiteDevicePage = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-3">
       <HeadingButtonAndBack
         title={`TVs do ${site.name}`}
         subtitle={site.address}
@@ -25,7 +27,9 @@ const SiteDevicePage = () => {
         buttonText="Adicionar TV"
         buttonBackPath="/sites"
       />
-    </>
+      <DeviceStatisticBlock devices={devices} />
+      <DevicesTable devices={devices} />
+    </div>
   );
 };
 

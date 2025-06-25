@@ -1,6 +1,6 @@
 import StatisticCard from "../cards/StatisticCard";
 import { Tv, Users, MapPin, ChartArea } from "lucide-react";
-
+import Colors from "../../constants/Colors";
 import { monthlyDelta } from "../../helpers/monthlyDelta.js";
 
 const StatisticsBlock = ({ sites }) => {
@@ -13,7 +13,7 @@ const StatisticsBlock = ({ sites }) => {
         value={156}
         subtitle={"12 TVs inativas"}
         resume={"+8% vs mês anterior"}
-        color={"#2dc82d"}
+        color={Colors.green}
         icon={<Tv size={16} />}
       />
       <StatisticCard
@@ -21,7 +21,7 @@ const StatisticsBlock = ({ sites }) => {
         value={156}
         subtitle={"12 Clientes inativas"}
         resume={"+8% vs mês anterior"}
-        color={"#4182f1"}
+        color={Colors.blue}
         icon={<Users size={16} />}
       />
       <StatisticCard
@@ -31,7 +31,7 @@ const StatisticsBlock = ({ sites }) => {
         resume={`${siteStats.diff >= 0 ? "+" : ""}${siteStats.pct.toFixed(
           0
         )}% vs mês anterior`}
-        color="#a654f6"
+        color={Colors.purple}
         icon={<MapPin size={16} />}
       />
       <StatisticCard
@@ -39,7 +39,7 @@ const StatisticsBlock = ({ sites }) => {
         value={156}
         subtitle={"12 TVs inativas"}
         resume={"+8% vs mês anterior"}
-        color={"#fb864a"}
+        color={Colors.orange}
         icon={<ChartArea size={16} />}
       />
     </div>

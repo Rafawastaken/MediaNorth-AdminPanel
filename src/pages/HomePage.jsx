@@ -1,7 +1,7 @@
 import { HeadingStandard } from "../components/ui/Headings.jsx";
 import StatisticsBlock from "../components/blocks/StatisticsBlock.jsx";
 import WarningsBlock from "../components/blocks/WarningsBlock.jsx";
-import LogsTableBlock from "../components/logs/LogsTableBlock.jsx";
+import LogsTable from "../components/tables/LogsTable.jsx";
 import Loading from "../components/ui/Loading.jsx";
 import { useSites } from "../hooks/useSites";
 import { toast } from "react-hot-toast";
@@ -35,7 +35,7 @@ const HomePage = () => {
       />
       <StatisticsBlock sites={sites} />
       <WarningsBlock />
-      <LogsTableBlock />
+      <LogsTable />
     </div>
   );
 };

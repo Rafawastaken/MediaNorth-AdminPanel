@@ -1,5 +1,5 @@
 import { HeadingStandardBack } from "../../components/ui/Headings.jsx";
-import AddSiteForm from "../../components/forms/AddSiteForm.jsx";
+import SiteForm from "../../components/forms/SiteForm.jsx";
 
 const AddSitePage = () => {
   return (
@@ -9,7 +9,7 @@ const AddSitePage = () => {
         subtitle={"Preencha as informações do novo local/ponto de exibição"}
         path="/sites"
       />
-      <AddSiteForm />
+      <SiteForm />
     </div>
   );
 };

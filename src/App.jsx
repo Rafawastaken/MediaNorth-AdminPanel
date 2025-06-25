@@ -8,8 +8,9 @@ import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/auth/LoginPage.jsx";
 import AddSitePage from "./pages/sites/AddSitePage.jsx";
 import SitePage from "./pages/sites/SitePage.jsx";
-import SiteDevicePage from "./pages/sites/SiteDevicePage.jsx";
-import AddDeviceSitePage from "./pages/sites/AddDeviceSitePage.jsx";
+import SiteDevicePage from "./pages/devices/SiteDevicePage.jsx";
+import AddDeviceSitePage from "./pages/devices/AddDeviceSitePage.jsx";
+import EditDevicePage from "./pages/devices/EditDevicePage.jsx";
 
 // Other
 import { Toaster } from "react-hot-toast";
@@ -36,6 +37,10 @@ const App = () => (
           <Route
             path="/sites/:idSite/devices/add"
             element={<AddDeviceSitePage />}
+          />
+          <Route
+            path="/sites/:idSite/devices/:idDevice/edit"
+            element={<EditDevicePage />}
           />
         </Route>
 

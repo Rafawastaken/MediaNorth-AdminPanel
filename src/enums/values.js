@@ -4,3 +4,10 @@ export const contractType = {
     free: "Gratuito",
     other: "Outro"
 }
+
+
+export const temperatureStatus = {
+    High: "Alta",
+    Normal: "Normal",
+    Low: "Baixa"
+}

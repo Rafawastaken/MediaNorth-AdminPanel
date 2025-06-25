@@ -5,9 +5,9 @@ import Loading from "../../components/ui/Loading";
 import SearchSite from "../../components/forms/ui/SearchSite";
 import SiteListBlock from "../../components/blocks/SiteListBlock";
 import NoResults from "../../components/ui/NoResults";
-import { useSitesSummary } from "../../hooks/useSitesSummary";
+import { useSitesSummary } from "../../hooks/useSiteSummary";
 
-export default function SitePage() {
+const SitePage = () => {
   const { sites, loading, error } = useSitesSummary();
 
   const [term, setTerm] = useState("");
@@ -59,4 +59,6 @@ export default function SitePage() {
       )}
     </div>
   );
-}
+};
+
+export default SitePage;
