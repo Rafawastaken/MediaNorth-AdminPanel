@@ -16,6 +16,7 @@ const SiteDevicePage = () => {
 
   if (error) {
     toast.error(`Erro ao carregar TVs: ${error.message}`);
+    return;
   }
 
   return (

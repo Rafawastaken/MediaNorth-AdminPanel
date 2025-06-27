@@ -187,7 +187,7 @@ const AddSiteForm = () => {
               <option value={""} selected>
                 Selecionar tipo de contracto
               </option>
-              s<option value="fixedValue">Valor Fixo</option>
+              <option value="fixedValue">Valor Fixo</option>
               <option value="sellingPercentage">Percentagem</option>
               <option value="free">Gratuito</option>
             </select>

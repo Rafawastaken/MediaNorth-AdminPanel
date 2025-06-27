@@ -9,8 +9,8 @@ import SchedulePicker from "./ui/SchedulePicker";
 import Loading from "../ui/Loading";
 
 export default function DeviceForm({
-  initialValues = {}, // {} = criar · {…} = editar
-  onSubmit, // (fields) => Promise
+  initialValues = {},
+  onSubmit,
   cancelPath = "#",
   submitLabel = "Guardar",
 }) {
@@ -38,7 +38,7 @@ export default function DeviceForm({
           : initialValues.schedule
         : {}
     );
-    setPassword(""); // nunca carregamos hashes no input
+    setPassword("");
   }, [initialValues]);
 
   /* ─────────── submit ─────────── */

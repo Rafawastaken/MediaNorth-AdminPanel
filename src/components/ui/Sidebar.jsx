@@ -150,19 +150,19 @@ const Sidebar = ({ collapsed = false }) => {
           collapsed={collapsed}
           defaultOpen
         >
-          <Item icon={Plus} to="/clientes/novo" collapsed={collapsed}>
+          <Item icon={Plus} to="/customers/add" collapsed={collapsed}>
             Novo Cliente
           </Item>
-          <Item icon={List} to="/clientes" collapsed={collapsed}>
+          <Item icon={List} to="/customers" collapsed={collapsed}>
             Lista de Clientes
           </Item>
         </Section>
 
         <Section icon={Store} label="Revenda" collapsed={collapsed} defaultOpen>
-          <Item icon={Plus} to="/revenda/novo" collapsed={collapsed}>
+          <Item icon={Plus} to="#" collapsed={collapsed}>
             Novo Canal
           </Item>
-          <Item icon={List} to="/revendedores" collapsed={collapsed}>
+          <Item icon={List} to="#" collapsed={collapsed}>
             Revendedores
           </Item>
         </Section>
