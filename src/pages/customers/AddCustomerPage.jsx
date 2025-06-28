@@ -9,7 +9,7 @@ const AddCustomerPage = () => {
         subtitle={"Preencha as informações do novo cliente"}
         path="/customers"
       />
-      <CustomerForm />
+      <CustomerForm cancelPath="/customers" />
     </div>
   );
 };

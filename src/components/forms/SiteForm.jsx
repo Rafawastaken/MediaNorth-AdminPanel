@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { BookPlus, ReceiptEuro, UserPlus, Save } from "lucide-react";
 import { FormInputCol, FormInputRow } from "./ui/Input";
+import FormActions from "./ui/FormActions";
 import Loading from "../ui/Loading";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useSites } from "../../hooks/useSites";
 
-const AddSiteForm = () => {
+const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
   // Form values
   const [siteName, setSiteName] = useState("");
   const [vatNumber, setVatNumber] = useState("");
@@ -211,21 +212,11 @@ const AddSiteForm = () => {
         />
       </div>
 
-      <div className="flex flex-row items-end justify-end gap-2">
-        <Link
-          to={"#"}
-          className="flex px-4 py-3 bg-gray-200 text-slate-600 items-center gap-2 rounded-md font-semibold hover:bg-gray-300 transition-all duration-300 cursor-pointer"
-        >
-          Cancelar
-        </Link>
-        <button
-          type="submit"
-          className="flex px-4 py-3 bg-blue-600 text-white items-center gap-2 rounded-md font-semibold hover:bg-blue-700 transition-all duration-300 cursor-pointer "
-        >
-          <Save size={16} />
-          Adicionar Local
-        </button>
-      </div>
+      <FormActions
+        cancelPath={cancelPath}
+        submitLabel={submitLabel}
+        cancelLabel={cancelLabel}
+      />
     </form>
   );
 };

@@ -1,10 +1,12 @@
 // src/components/forms/DeviceForm.jsx
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Lock, UserRoundPen, Save, Clock } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Lock, Tv2, Clock, Save } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 import { FormInputCol, FormInputRow } from "./ui/Input";
+import FormSection from "./ui/FormSection";
+import FormActions from "./ui/FormActions";
 import SchedulePicker from "./ui/SchedulePicker";
 import Loading from "../ui/Loading";
 
@@ -39,7 +41,7 @@ export default function DeviceForm({
         : {}
     );
     setPassword("");
-  }, [initialValues]);
+  }, [initialValues?.id]);
 
   /* ─────────── submit ─────────── */
   const handleSubmit = async (e) => {
@@ -75,12 +77,7 @@ export default function DeviceForm({
   return (
     <form onSubmit={handleSubmit} className="mt-5 flex w-full flex-col gap-5">
       {/* Dados de acesso */}
-      <section className="rounded-lg bg-gray-50 p-4 shadow-sm ring-1 ring-slate-200">
-        <header className="flex items-center gap-2">
-          <Lock />
-          <h2 className="text-xl font-semibold">Dados de Acesso</h2>
-        </header>
-
+      <FormSection icon={Lock} title={"Dados de Acesso"}>
         <div className="mt-2 flex gap-3">
           <FormInputCol
             value={login}
@@ -101,15 +98,14 @@ export default function DeviceForm({
             required={!initialValues.id} /* obrigatória só em criação */
           />
         </div>
-      </section>
+      </FormSection>
 
-      {/* Dados básicos */}
-      <section className="rounded-lg bg-gray-50 p-4 shadow-sm ring-1 ring-slate-200">
-        <header className="flex items-center gap-2">
-          <UserRoundPen />
-          <h2 className="text-xl font-semibold">Dados Básicos</h2>
-        </header>
-
+      {/* Dados dispositivo */}
+      <FormSection
+        icon={Tv2}
+        title={"Dados do Dispositivo"}
+        className="flex flex-col gap-3"
+      >
         <FormInputRow
           value={name}
           onChange={setName}
@@ -132,34 +128,18 @@ export default function DeviceForm({
           label="Resolução de TV"
           placeholder="Resolução de TV"
         />
-      </section>
+      </FormSection>
 
       {/* Horário */}
-      <section className="rounded-lg bg-gray-50 p-4 shadow-sm ring-1 ring-slate-200">
-        <header className="flex items-center gap-2">
-          <Clock />
-          <h2 className="text-xl font-semibold">Horário de Reprodução</h2>
-        </header>
-
+      <FormSection icon={Clock} title={"Horário de Reprodução"}>
         <SchedulePicker value={schedule} onChange={setSchedule} />
-      </section>
+      </FormSection>
 
-      {/* Botões */}
-      <div className="flex justify-end gap-2">
-        <Link
-          to={cancelPath}
-          className="rounded-md bg-gray-200 px-4 py-3 font-semibold text-slate-600 hover:bg-gray-300"
-        >
-          Cancelar
-        </Link>
-
-        <button
-          type="submit"
-          className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"
-        >
-          <Save size={16} /> {submitLabel}
-        </button>
-      </div>
+      <FormActions
+        cancelPath={cancelPath}
+        submitLabel={submitLabel}
+        cancelLabel={"Cancelar"}
+      />
     </form>
   );
 }

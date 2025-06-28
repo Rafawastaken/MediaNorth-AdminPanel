@@ -20,7 +20,10 @@ export default function SchedulePicker({ value = {}, onChange }) {
   const [local, setLocal] = useState({ ...defaultSchedule, ...value });
 
   useEffect(() => {
-    setLocal({ ...defaultSchedule, ...value });
+    setLocal((prev) => {
+      const next = { ...defaultSchedule, ...value };
+      return JSON.stringify(prev) === JSON.stringify(next) ? prev : next;
+    });
   }, [value]);
 
   const update = (day, field, val) => {

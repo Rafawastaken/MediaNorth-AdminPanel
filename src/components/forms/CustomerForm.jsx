@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+
 import Loading from "../ui/Loading";
+import FormActions from "./ui/FormActions";
 import FormSection from "./ui/FormSection";
+
 import ContractTypeInput from "./ui/ContractTypeInput";
 import { Building2, ReceiptEuro, UserPlus, Save } from "lucide-react";
 import { FormInputCol, FormInputRow } from "./ui/Input";
@@ -180,21 +183,7 @@ const CustomerForm = ({
       </FormSection>
 
       {/* Botões */}
-      <div className="flex justify-end gap-2">
-        <Link
-          to={cancelPath}
-          className="rounded-md bg-gray-200 px-4 py-3 font-semibold text-slate-600 hover:bg-gray-300"
-        >
-          Cancelar
-        </Link>
-
-        <button
-          type="submit"
-          className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"
-        >
-          <Save size={16} /> {submitLabel}
-        </button>
-      </div>
+      <FormActions cancelPath={cancelPath} submitLabel={submitLabel} />
     </form>
   );
 };

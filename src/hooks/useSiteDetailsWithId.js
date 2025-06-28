@@ -25,7 +25,7 @@ export function useSiteDetailsWithId(idSite) {
             customer_video (
               id,
               video_url,
-              customer!inner ( id, name )
+              customer!inner ( id, company_name )
             )
           )
         )

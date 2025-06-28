@@ -9,7 +9,11 @@ const AddSitePage = () => {
         subtitle={"Preencha as informações do novo local/ponto de exibição"}
         path="/sites"
       />
-      <SiteForm />
+      <SiteForm
+        cancelPath={"/sites"}
+        cancelLabel={"Cancelar"}
+        submitLabel={"Guardar"}
+      />
     </div>
   );
 };
