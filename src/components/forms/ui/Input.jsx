@@ -33,9 +33,10 @@ export const FormInputRow = ({
   onChange,
   required = false,
   type = "text",
+  className,
 }) => {
   return (
-    <div className="flex flex-col items-start gap-1 flex-1 ">
+    <div className={`flex flex-col items-start gap-1 flex-1 ${className}`}>
       <label htmlFor="siteName" className={"text-sm font-medium"}>
         {label}
       </label>

@@ -77,7 +77,7 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
             value={siteName}
             onChange={setSiteName}
             label={"Nome do Local *"}
-            placeholder={"Nome do local"}
+            placeholder={"Estação de Pesquisa Dulvey"}
             required={true}
           />
           {/*--Nif ---------------------------------- */}
@@ -85,7 +85,7 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
             value={vatNumber}
             onChange={setVatNumber}
             label={"NIF"}
-            placeholder={"NIF"}
+            placeholder={"999888777"}
             type="number"
           />
         </div>
@@ -94,7 +94,9 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
           value={siteAddress}
           onChange={setSiteAddress}
           label={"Morada *"}
-          placeholder={"Morada"}
+          placeholder={
+            "Quinta Baker, Estrada Rural 4, Dulvey Parish, Louisiana"
+          }
           required={true}
         />
 
@@ -138,7 +140,7 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
           <FormInputCol
             value={contactName}
             onChange={setContactName}
-            placeholder={"Nome do responsável"}
+            placeholder={"Dr. Alexia Ashford"}
             label={"Responsável *"}
             required={true}
           />
@@ -146,7 +148,7 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
           <FormInputCol
             value={contactPhone}
             onChange={setContactPhone}
-            placeholder={"Contacto de Responsável"}
+            placeholder={"934112776"}
             label={"Contacto *"}
             required={true}
           />
@@ -156,7 +158,7 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
           value={contactEmail}
           onChange={setContactEmail}
           label={"Email *"}
-          placeholder={"Endereço de Email"}
+          placeholder={"aashford@umbrella-corp.pt"}
           required={true}
           type="email"
         />
@@ -199,7 +201,7 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
             label={"Valor Mensal"}
             onChange={setContractValue}
             value={contractValue}
-            placeholder={"Valor Mensal"}
+            placeholder={"120000€ ou 50%"}
           />
         </div>
         {/*--Contact Obs ---------------------------------- */}
@@ -207,7 +209,9 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
           value={contractObservations}
           onChange={setContractObservations}
           label={"Observações"}
-          placeholder={"Observações adicionais"}
+          placeholder={
+            "Infraestrutura isolada. Inclui monitorização B.O.W. e segurança nível 5. Contrato confidencial."
+          }
           type="text"
         />
       </div>

@@ -83,7 +83,7 @@ export default function DeviceForm({
             value={login}
             onChange={setLogin}
             label="Login do Dispositivo *"
-            placeholder="Login do dispositivo"
+            placeholder="umbra-device-007"
             required
           />
 
@@ -93,7 +93,7 @@ export default function DeviceForm({
             label={
               initialValues.id ? "Nova Password" : "Password do Dispositivo *"
             }
-            placeholder="Password do dispositivo"
+            placeholder="T-Virus@2025!"
             type="password"
             required={!initialValues.id} /* obrigatória só em criação */
           />
@@ -110,7 +110,7 @@ export default function DeviceForm({
           value={name}
           onChange={setName}
           label="Nome do Dispositivo *"
-          placeholder="Nome do dispositivo"
+          placeholder="Painel de Controlo - Câmara Subterrânea 3"
           required
         />
 
@@ -118,7 +118,7 @@ export default function DeviceForm({
           value={location}
           onChange={setLocation}
           label="Localização do Artigo *"
-          placeholder="Localização do artigo"
+          placeholder="Instalação Umbrella – Complexo Subterrâneo, Zona Oeste"
           required
         />
 
@@ -126,7 +126,7 @@ export default function DeviceForm({
           value={resolution}
           onChange={setResolution}
           label="Resolução de TV"
-          placeholder="Resolução de TV"
+          placeholder="3840x2160 (4K UHD)"
         />
       </FormSection>
 
