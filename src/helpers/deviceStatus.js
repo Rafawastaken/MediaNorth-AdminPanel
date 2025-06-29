@@ -1,4 +1,4 @@
-// src/utils/deviceStatus.js
+// src/helpers/deviceStatus.js
 
 /**
  * Devolve `true` se o dispositivo foi visto há menos de `thresholdMinutes`.

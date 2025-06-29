@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { contractType } from "../../enums/values";
 import { computeValue } from "../../helpers/computeValue";
+import { isContractActive } from "../../helpers/computeContractActive";
 
 const CustomerCard = ({ customer }) => {
   const normalizedContractType =
@@ -19,6 +20,7 @@ const CustomerCard = ({ customer }) => {
     customer.contract_value,
     customer.contract_type
   );
+  const contractActive = isContractActive(customer.contract_end_date);
 
   return (
     <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-200">
@@ -34,8 +36,17 @@ const CustomerCard = ({ customer }) => {
             </span>
           </div>
         </div>
+        <span
+          className={`rounded-full px-3 py-0.5 text-xs font-medium 
+            ${
+              contractActive
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+        >
+          {contractActive ? "Ativo" : "Inativo"}
+        </span>
       </div>
-
       {/* Morada + contacto */}
       <ul className="mt-4 space-y-1 text-sm text-slate-600">
         <li className="flex items-center gap-2">
@@ -55,7 +66,6 @@ const CustomerCard = ({ customer }) => {
           {customer.contact_email}
         </li>
       </ul>
-
       {/* Contrato */}
       <div className="mt-5 rounded-lg bg-slate-50 px-4 py-3 text-sm">
         <div className="flex items-center justify-between">
@@ -69,9 +79,7 @@ const CustomerCard = ({ customer }) => {
           </span>
         </div>
       </div>
-
       <div className="border-b border-gray-200 my-5" />
-
       {/* Estatisticas  */}
       <div className="grid grid-cols-2 text-center text-sm">
         <div>
@@ -83,7 +91,6 @@ const CustomerCard = ({ customer }) => {
           <span className="text-slate-500">Anúncios</span>
         </div>
       </div>
-
       {/* Ações */}
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <Link
