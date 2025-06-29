@@ -70,7 +70,7 @@ export default function SiteCard({ site }) {
           {site.contact_phone}
         </li>
         <li className="flex items-center gap-2">
-          <Phone size={16} />
+          <Mail size={16} />
           {site.contact_email}
         </li>
       </ul>
