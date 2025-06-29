@@ -14,6 +14,7 @@ import SiteDevicePage from "./pages/devices/SiteDevicePage.jsx";
 import AddDeviceSitePage from "./pages/devices/AddDeviceSitePage.jsx";
 import EditDevicePage from "./pages/devices/EditDevicePage.jsx";
 // Customers
+import CustomerPage from "./pages/customers/CustomerPage.jsx";
 import AddCustomerPage from "./pages/customers/AddCustomerPage.jsx";
 
 // Other
@@ -46,6 +47,7 @@ const App = () => (
             path="/sites/:idSite/devices/:idDevice/edit"
             element={<EditDevicePage />}
           />
+          <Route path="/customers" element={<CustomerPage />} />
           <Route path="/customers/add" element={<AddCustomerPage />} />
         </Route>
 
