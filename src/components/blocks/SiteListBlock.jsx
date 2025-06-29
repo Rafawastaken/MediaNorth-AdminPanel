@@ -1,12 +1,12 @@
-import SiteCard from '../cards/SiteCards.jsx';
+import SiteCard from "../cards/SiteCards.jsx";
 
-const SiteListBlock = ({sites}) => {
+const SiteListBlock = ({ sites }) => {
   return (
-      <ul className="grid grid-cols-3 gap-4">
-        {sites.map((site) => (
-            <SiteCard site={site}/>
-        ))}
-      </ul>
+    <ul className="grid grid-cols-3 gap-4">
+      {sites.map((site) => (
+        <SiteCard site={site} key={site.id} />
+      ))}
+    </ul>
   );
 };
 

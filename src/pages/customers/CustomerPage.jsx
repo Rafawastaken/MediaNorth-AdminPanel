@@ -5,6 +5,7 @@ import Loading from "../../components/ui/Loading";
 import NoResults from "../../components/ui/NoResults";
 import { HeadingButton } from "../../components/ui/Headings";
 import { useCustomersList } from "../../hooks/useCustomersList";
+import CustomersListBlock from "../../components/blocks/CustomersListBlock";
 
 export default function CustomerPage() {
   const { customers, loading, error } = useCustomersList();
@@ -48,7 +49,7 @@ export default function CustomerPage() {
       />
 
       {filtered.length ? (
-        <p>Lista de Clientes</p>
+        <CustomersListBlock customers={customers} />
       ) : (
         <NoResults
           title="Sem clientes a mostrar"

@@ -16,9 +16,12 @@ export function useCustomersList() {
                 .select(`
           id,
           company_name,
+          company_activity,
+          company_address,
           company_vat,
           contact_name,
           contact_phone,
+          contact_email,
           contract_type
         `)
                 .order("created_at", { ascending: false });
