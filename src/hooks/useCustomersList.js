@@ -22,7 +22,8 @@ export function useCustomersList() {
           contact_name,
           contact_phone,
           contact_email,
-          contract_type
+          contract_type,
+          contract_value
         `)
                 .order("created_at", { ascending: false });
 

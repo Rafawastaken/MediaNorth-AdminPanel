@@ -1,14 +1,28 @@
 // src/components/cards/SiteCard.jsx
 import { Link } from "react-router-dom";
-import { Eye, Tv2, Pencil, Trash2 } from "lucide-react";
+import {
+  Eye,
+  Tv2,
+  Pencil,
+  Trash2,
+  Mail,
+  MapPinHouse,
+  Phone,
+  User2,
+} from "lucide-react";
 import { iconBySiteType } from "../../enums/icons";
 import { contractType } from "../../enums/values";
+import { computeValue } from "../../helpers/computeValue";
 
 export default function SiteCard({ site }) {
   const Icon = iconBySiteType[site.site_type] ?? iconBySiteType.other;
   const normalizedContractType =
     contractType[site.contract_type] ?? contractType.other;
   const isActive = site.active ?? true;
+  const normalizedContractValue = computeValue(
+    site.contract_value,
+    site.contract_type
+  );
 
   return (
     <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-200">
@@ -43,63 +57,21 @@ export default function SiteCard({ site }) {
 
       {/* Morada + contacto */}
       <ul className="mt-4 space-y-1 text-sm text-slate-600">
-        <li className="flex items-start gap-2">
-          <svg
-            className="h-4 w-4 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 10.5a2.25 2.25 0 10-2.25-2.25A2.25 2.25 0 0012 10.5z"
-            ></path>
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19.5 10.5c0 7.665-7.5 11.25-7.5 11.25S4.5 18.165 4.5 10.5a7.5 7.5 0 1115 0z"
-            ></path>
-          </svg>
+        <li className="flex items-center gap-2">
+          <MapPinHouse size={16} />
           {site.address}
         </li>
-        <li className="flex items-start gap-2">
-          <svg
-            className="h-4 w-4 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M2.25 6.75 12 13.5l9.75-6.75"
-            ></path>
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M2.25 17.25l9.75-6.75 9.75 6.75"
-            ></path>
-          </svg>
+        <li className="flex items-center gap-2">
+          <User2 size={16} />
           {site.contact_name}
         </li>
-        <li className="flex items-start gap-2">
-          <svg
-            className="h-4 w-4 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M2.25 8.25 11.999 13.5l9.75-5.25M2.25 8.25v7.5L12 21.75l9.75-5.25v-7.5"
-            ></path>
-          </svg>
+        <li className="flex items-center gap-2">
+          <Phone size={16} />
           {site.contact_phone}
+        </li>
+        <li className="flex items-center gap-2">
+          <Phone size={16} />
+          {site.contact_email}
         </li>
       </ul>
 
@@ -112,14 +84,14 @@ export default function SiteCard({ site }) {
         <div className="flex items-center justify-between">
           <span className="font-medium text-slate-500">Valor:</span>
           <span className="font-semibold text-emerald-600">
-            {site.contract_value ?? "—"}
+            {normalizedContractValue}
           </span>
         </div>
       </div>
 
       <div className="border-b border-gray-200 my-5" />
 
-      {/* Estatísticas placeholders */}
+      {/* Estatísticas  */}
       <div className="grid grid-cols-3 text-center text-sm">
         <div>
           <p className="text-blue-700 font-bold text-lg">{site.totalDevices}</p>
