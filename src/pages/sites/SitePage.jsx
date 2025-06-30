@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import { HeadingButton } from "../../components/ui/Headings";
 import Loading from "../../components/ui/Loading";
-import SearchSite from "../../components/forms/ui/SearchSite";
+import SearchResults from "../../components/forms/ui/SearchResults";
 import SiteListBlock from "../../components/blocks/SiteListBlock";
 import NoResults from "../../components/ui/NoResults";
 import { useSitesSummary } from "../../hooks/useSiteSummary";
@@ -42,11 +42,12 @@ const SitePage = () => {
         buttonText="Adicionar"
       />
 
-      <SearchSite
+      <SearchResults
         term={term}
         onTermChange={setTerm}
         status={status}
         onStatusChange={setStatus}
+        placeholder={"Pesquisar locais..."}
       />
 
       {filteredSites.length ? (

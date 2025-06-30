@@ -1,11 +1,12 @@
 import { useCallback } from "react";
 
-export default function SearchSite({
+const SearchResults = ({
   term,
   onTermChange,
   status,
   onStatusChange,
-}) {
+  placeholder,
+}) => {
   const handleInput = useCallback(
     (e) => onTermChange(e.target.value),
     [onTermChange]
@@ -19,8 +20,8 @@ export default function SearchSite({
     <div className="flex items-center justify-between gap-5 bg-white shadow-sm py-5 px-2 rounded-md">
       <input
         type="text"
-        id="searchSite"
-        placeholder="Pesquisar locais…"
+        id="searchResults"
+        placeholder={placeholder}
         value={term}
         onChange={handleInput}
         className="flex-1 rounded-md border border-gray-200 py-2 px-4 focus:outline-blue-200"
@@ -43,4 +44,6 @@ export default function SearchSite({
       </div>
     </div>
   );
-}
+};
+
+export default SearchResults;

@@ -1,28 +1,40 @@
 // src/pages/customers/CustomerPage.jsx
 import { useState, useMemo } from "react";
 import { toast } from "react-hot-toast";
-import Loading from "../../components/ui/Loading";
-import NoResults from "../../components/ui/NoResults";
 import { HeadingButton } from "../../components/ui/Headings";
 import { useCustomersList } from "../../hooks/useCustomersList";
+import { isContractActive } from "../../helpers/computeContractActive";
+import Loading from "../../components/ui/Loading";
+import NoResults from "../../components/ui/NoResults";
 import CustomersListBlock from "../../components/blocks/CustomersListBlock";
+import SearchResults from "../../components/forms/ui/SearchResults";
 
 export default function CustomerPage() {
   const { customers, loading, error } = useCustomersList();
-
   const [term, setTerm] = useState("");
-
+  const [status, setStatus] = useState("");
   /* pesquisa simples */
   const filtered = useMemo(() => {
     const t = term.trim().toLowerCase();
-    if (!t) return customers;
 
-    return customers.filter((c) =>
-      [c.company_name, c.contact_name, c.company_vat].some((v) =>
-        v?.toLowerCase().includes(t)
-      )
+    return (
+      customers
+        /* estado activo/inactivo baseado na data */
+        .filter((c) => {
+          if (status === "active") return isContractActive(c.contract_end_date);
+          if (status === "inactive")
+            return !isContractActive(c.contract_end_date);
+          return true; // "all"
+        })
+        /* termo de pesquisa */
+        .filter((c) => {
+          if (!t) return true;
+          return [c.company_name, c.company_vat, c.contact_name].some((field) =>
+            field?.toLowerCase().includes(t)
+          );
+        })
     );
-  }, [customers, term]);
+  }, [customers, term, status]);
 
   if (loading) return <Loading message="A carregar clientes…" full />;
 
@@ -41,15 +53,16 @@ export default function CustomerPage() {
       />
 
       {/* barra de pesquisa mínima – opcional */}
-      <input
-        value={term}
-        onChange={(e) => setTerm(e.target.value)}
+      <SearchResults
+        term={term}
+        onTermChange={setTerm}
+        status={status}
+        onStatusChange={setStatus}
         placeholder="Pesquisar clientes…"
-        className="w-64 rounded border px-3 py-2"
       />
 
       {filtered.length ? (
-        <CustomersListBlock customers={customers} />
+        <CustomersListBlock customers={filtered} />
       ) : (
         <NoResults
           title="Sem clientes a mostrar"

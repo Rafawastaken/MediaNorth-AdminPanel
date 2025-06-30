@@ -1,15 +1,11 @@
-// src/helpers/computeContractActive.js
+// src/helpers/isContractActive.js
+export function isContractActive(isoDate) {
+    if (!isoDate) return true;          // sem data → assume activo
 
-/**
- * Devolve `true` se o contracto ainda estiver ativo
- * 
- * @param {string|Date} contractEndDate - ISO string ou data
- */
-export function isContractActive(contractEndDate) {
-    if (!contractEndDate) return false;
+    // normaliza para meia-noite (evita diferenças de fuso horário)
+    const end = new Date(isoDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    const endDate = new Date(contractEndDate).getTime();
-    const currentDate = Date.now();
-
-    return endDate > currentDate;
+    return end >= today;
 }
