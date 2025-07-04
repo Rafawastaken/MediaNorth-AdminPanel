@@ -22,6 +22,7 @@ export default function VideoForm({
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoDuration, setVideoDuration] = useState("");
+  const [videoStatus, setVideoStatus] = useState("");
 
   /* ---------- TVs ------------ */
   const [deviceSearch, setDeviceSearch] = useState("");
@@ -84,6 +85,7 @@ export default function VideoForm({
         videoTitle,
         videoDescription,
         videoDuration,
+        videoStatus,
         deviceIds, // envia array de TVs
       });
       navigate(`/customers/${customerId}`);
@@ -127,27 +129,47 @@ export default function VideoForm({
           required
         />
 
-        <FormInputCol
-          className="mt-3"
+        <FormInputRow
           value={videoDuration}
           onChange={setVideoDuration}
-          label="Duração (seg) *"
+          label="Duração *"
           placeholder="30"
-          type="number"
+          className="mt-2"
           required
         />
+
+        <div className={"flex flex-col mt-3 items-start gap-1 flex-1"}>
+          <label htmlFor="siteType" className="text-sm font-medium">
+            Estado do Video *
+          </label>
+          <select
+            id="videoStatus"
+            onChange={(e) => setVideoStatus(e.target.value)}
+            className="text-sm font-normal border-1 border-gray-200 w-full px-2 py-2 rounded-md"
+            value={videoStatus}
+            required
+          >
+            <option value="active" selected>
+              Ativo
+            </option>
+            <option value="paused">Pausado</option>
+            <option value="deactive">Desativo</option>
+          </select>
+        </div>
       </FormSection>
 
       {/* TVs */}
       <FormSection icon={Tv2} title="Escolher Televisões">
-        <FormInputCol
-          value={deviceSearch}
-          onChange={setDeviceSearch}
-          label="Procurar TV"
-          placeholder="Filtrar por nome ou localização…"
-        />
+        <div className="mt-3">
+          <FormInputCol
+            value={deviceSearch}
+            onChange={setDeviceSearch}
+            label="Procurar TV"
+            placeholder="Filtrar por nome ou localização…"
+          />
+        </div>
 
-        <label className="mt-2 flex flex-col text-sm flex-1">
+        <label className="mt-3 flex flex-col text-sm flex-1">
           <span className="mb-1 font-medium">
             Televisões * (Ctrl/Cmd-click para várias)
           </span>
@@ -157,7 +179,7 @@ export default function VideoForm({
             size={5}
             value={deviceIds}
             onChange={handleSelect}
-            className="h-full rounded-md border px-3 py-2"
+            className="h-full rounded-md border-1 border-gray-200 px-3 py-2"
           >
             {filteredDevices.map((d) => (
               <option key={d.id} value={d.id}>

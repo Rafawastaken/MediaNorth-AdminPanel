@@ -19,6 +19,7 @@ export async function saveVideo(customerId, payload) {
         videoTitle,
         videoDescription,
         videoDuration,
+        videoStatus,
         deviceIds,
     } = payload;
 
@@ -30,6 +31,7 @@ export async function saveVideo(customerId, payload) {
             video_title: videoTitle.trim(),
             video_description: videoDescription.trim(),
             video_duration: String(videoDuration),
+            video_status: String(videoStatus),
             customer_id: customerId,
         })
         .select("id")

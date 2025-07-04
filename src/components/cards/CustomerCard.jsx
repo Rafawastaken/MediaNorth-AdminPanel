@@ -12,8 +12,14 @@ import {
 import { contractType } from "../../enums/values";
 import { computeValue } from "../../helpers/computeValue";
 import { isContractActive } from "../../helpers/computeContractActive";
+import { useCustomerVideos } from "../../hooks/useCustomerVideos";
+import Loading from "../ui/Loading";
 
 const CustomerCard = ({ customer }) => {
+  const { videos, stats, loading, error } = useCustomerVideos(
+    customer.id,
+    "all"
+  );
   const normalizedContractType =
     contractType[customer.contract_type] ?? contractType.other;
   const normalizedContractValue = computeValue(
@@ -21,6 +27,10 @@ const CustomerCard = ({ customer }) => {
     customer.contract_type
   );
   const contractActive = isContractActive(customer.contract_end_date);
+
+  if (loading) {
+    return <Loading message="Carregando cliente..." full />;
+  }
 
   return (
     <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-200">
@@ -83,11 +93,11 @@ const CustomerCard = ({ customer }) => {
       {/* Estatisticas  */}
       <div className="grid grid-cols-2 text-center text-sm">
         <div>
-          <p className="text-blue-700 font-bold text-lg">5</p>
+          <p className="text-blue-700 font-bold text-lg">{stats.devices}</p>
           <span className="text-slate-500">Pontos</span>
         </div>
         <div>
-          <p className="text-green-700 font-bold text-lg">0</p>
+          <p className="text-green-700 font-bold text-lg">{stats.total}</p>
           <span className="text-slate-500">Anúncios</span>
         </div>
       </div>

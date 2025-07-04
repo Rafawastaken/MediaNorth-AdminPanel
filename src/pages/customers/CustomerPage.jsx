@@ -1,19 +1,38 @@
 import { useParams } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import Loading from "../../components/ui/Loading";
 import { useCustomer } from "../../hooks/useCustomer";
+import { useCustomerVideos } from "../../hooks/useCustomerVideos";
 import { HeadingButtonAndBack } from "../../components/ui/Headings";
 import CustomerDetailsCard from "../../components/cards/CustomerDetailsCard";
+import CustomerVideoStatsBlock from "../../components/blocks/CustomerVideoStatsBlock";
 
 export default function CustomersPage() {
   const { idCustomer } = useParams();
-  const { customer, loading, error } = useCustomer(idCustomer);
+  const {
+    customer,
+    loading: customerLoading,
+    error: customerError,
+  } = useCustomer(idCustomer);
+  const {
+    videos,
+    stats,
+    loading: videoStatsLoading,
+    error: videoStatsError,
+  } = useCustomerVideos(idCustomer, "all");
 
-  if (loading) {
+  if (customerLoading || videoStatsLoading) {
     return <Loading message="Carregando cliente..." full />;
   }
 
-  if (error) {
-    toast.error(`Erro ao carregar cliente: ${error.message}`);
+  if (customerError || videoStatsError) {
+    if (customerError) {
+      toast.error(`Erro ao carregar cliente: ${customerError.message}`);
+    } else {
+      toast.error(
+        `Erro ao carregar vídeos e estatísticas: ${videoStatsError.message}`
+      );
+    }
     return;
   }
 
@@ -27,8 +46,7 @@ export default function CustomersPage() {
         buttonBackPath="/customers"
       />
       <CustomerDetailsCard customer={customer} />
-      {/* VideoStatisticBlock */}
-      {/* VideosTable */}
+      <CustomerVideoStatsBlock videos={videos} stats={stats} />
     </div>
   );
 }
