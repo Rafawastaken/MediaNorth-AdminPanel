@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import DeviceStatisticBlock from "../../components/blocks/DeviceStatisticBlock";
 import DevicesTable from "../../components/tables/DevicesTable";
 
-const SiteDevicePage = () => {
+export default function DevicePage() {
   const { idSite } = useParams();
   const { site, devices, loading, error } = useSiteDetailsWithId(idSite);
 
@@ -32,6 +32,4 @@ const SiteDevicePage = () => {
       <DevicesTable devices={devices} />
     </div>
   );
-};
-
-export default SiteDevicePage;
+}

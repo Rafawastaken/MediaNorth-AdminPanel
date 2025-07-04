@@ -7,7 +7,7 @@ import DeviceForm from "../../components/forms/DeviceForm";
 import Loading from "../../components/ui/Loading";
 import { HeadingStandardBack } from "../../components/ui/Headings";
 
-const AddDeviceSitePage = () => {
+const AddDevicePage = () => {
   const { idSite } = useParams();
   const { site, addDevice, loading, error } = useSiteDetailsWithId(idSite);
 
@@ -35,4 +35,4 @@ const AddDeviceSitePage = () => {
   );
 };
 
-export default AddDeviceSitePage;
+export default AddDevicePage;

@@ -100,17 +100,12 @@ const CustomerCard = ({ customer }) => {
           <Eye size={16} /> Ver
         </Link>
         <Link
-          to={`/customers/${customer.id}/devices`}
+          to={`/customers/${customer.id}/edit`}
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border-1 border-gray-200 px-4 py-2 text-sm hover:bg-slate-50"
         >
-          <Tv2 size={16} /> TVs
+          <Pencil size={16} /> Editar
         </Link>
-        <button
-          className="rounded-lg border-1 border-gray-200 p-2 hover:bg-slate-50"
-          aria-label="Editar"
-        >
-          <Pencil size={16} />
-        </button>
+
         <button
           className="rounded-lg border-1 border-gray-200 p-2 hover:bg-slate-50"
           aria-label="Apagar"

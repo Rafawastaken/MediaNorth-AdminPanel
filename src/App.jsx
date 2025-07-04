@@ -10,12 +10,15 @@ import LoginPage from "./pages/auth/LoginPage.jsx";
 import AddSitePage from "./pages/sites/AddSitePage.jsx";
 import SitePage from "./pages/sites/SitePage.jsx";
 // Devices
-import SiteDevicePage from "./pages/devices/SiteDevicePage.jsx";
-import AddDeviceSitePage from "./pages/devices/AddDeviceSitePage.jsx";
+import DevicePage from "./pages/devices/DevicePage.jsx";
+import AddDevicePage from "./pages/devices/AddDevicePage.jsx";
 import EditDevicePage from "./pages/devices/EditDevicePage.jsx";
 // Customers
-import CustomerPage from "./pages/customers/CustomerPage.jsx";
+import CustomersPage from "./pages/customers/CustomersPage.jsx";
 import AddCustomerPage from "./pages/customers/AddCustomerPage.jsx";
+import CustomerPage from "./pages/customers/CustomerPage.jsx";
+// Videos
+import AddVideoPage from "./pages/videos/AddVideoPage.jsx";
 
 // Other
 import { Toaster } from "react-hot-toast";
@@ -32,23 +35,31 @@ const App = () => (
             </ProtectedRoute>
           }
         >
-          {/* Standard */}
+          {/* ---General----------------------- */}
           <Route path="/" element={<HomePage />} />
 
-          {/* Sites */}
+          {/* ---Sites----------------------- */}
           <Route path="/sites" element={<SitePage />} />
           <Route path="/sites/add" element={<AddSitePage />} />
-          <Route path="/sites/:idSite/devices" element={<SiteDevicePage />} />
+          {/* ---Devices----------------------- */}
+          <Route path="/sites/:idSite/devices" element={<DevicePage />} />
           <Route
             path="/sites/:idSite/devices/add"
-            element={<AddDeviceSitePage />}
+            element={<AddDevicePage />}
           />
           <Route
             path="/sites/:idSite/devices/:idDevice/edit"
             element={<EditDevicePage />}
           />
-          <Route path="/customers" element={<CustomerPage />} />
+          {/* ---Customers----------------------- */}
+          <Route path="/customers" element={<CustomersPage />} />
           <Route path="/customers/add" element={<AddCustomerPage />} />
+          <Route path="/customers/:idCustomer" element={<CustomerPage />} />
+          {/* ---Videos----------------------- */}
+          <Route
+            path="/customers/:idCustomer/videos/add"
+            element={<AddVideoPage />}
+          />
         </Route>
 
         {/* Auth/Public */}

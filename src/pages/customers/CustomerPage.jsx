@@ -1,74 +1,32 @@
-// src/pages/customers/CustomerPage.jsx
-import { useState, useMemo } from "react";
-import { toast } from "react-hot-toast";
-import { HeadingButton } from "../../components/ui/Headings";
-import { useCustomersList } from "../../hooks/useCustomersList";
-import { isContractActive } from "../../helpers/computeContractActive";
+import { useParams } from "react-router-dom";
 import Loading from "../../components/ui/Loading";
-import NoResults from "../../components/ui/NoResults";
-import CustomersListBlock from "../../components/blocks/CustomersListBlock";
-import SearchResults from "../../components/forms/ui/SearchResults";
+import { useCustomer } from "../../hooks/useCustomer";
+import { HeadingButtonAndBack } from "../../components/ui/Headings";
 
-export default function CustomerPage() {
-  const { customers, loading, error } = useCustomersList();
-  const [term, setTerm] = useState("");
-  const [status, setStatus] = useState("");
-  /* pesquisa simples */
-  const filtered = useMemo(() => {
-    const t = term.trim().toLowerCase();
+export default function CustomersPage() {
+  const { idCustomer } = useParams();
+  const { customer, loading, error } = useCustomer(idCustomer);
 
-    return (
-      customers
-        /* estado activo/inactivo baseado na data */
-        .filter((c) => {
-          if (status === "active") return isContractActive(c.contract_end_date);
-          if (status === "inactive")
-            return !isContractActive(c.contract_end_date);
-          return true; // "all"
-        })
-        /* termo de pesquisa */
-        .filter((c) => {
-          if (!t) return true;
-          return [c.company_name, c.company_vat, c.contact_name].some((field) =>
-            field?.toLowerCase().includes(t)
-          );
-        })
-    );
-  }, [customers, term, status]);
-
-  if (loading) return <Loading message="A carregar clientes…" full />;
+  if (loading) {
+    return <Loading message="Carregando cliente..." full />;
+  }
 
   if (error) {
-    toast.error(`Erro ao carregar clientes: ${error.message}`);
-    return null;
+    toast.error(`Erro ao carregar cliente: ${error.message}`);
+    return;
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <HeadingButton
-        title="Lista de Clientes"
-        subtitle="Clientes registados"
-        path="/customers/add"
-        buttonText="Adicionar"
+    <div>
+      <HeadingButtonAndBack
+        title={`${customer.company_name}`}
+        subtitle="Informações detalhadas e campanhas ativas"
+        buttonPath={`/customers/${idCustomer}/videos/add`}
+        buttonText="Adicionar Vídeo"
+        buttonBackPath="/customers"
       />
-
-      {/* barra de pesquisa mínima – opcional */}
-      <SearchResults
-        term={term}
-        onTermChange={setTerm}
-        status={status}
-        onStatusChange={setStatus}
-        placeholder="Pesquisar clientes…"
-      />
-
-      {filtered.length ? (
-        <CustomersListBlock customers={filtered} />
-      ) : (
-        <NoResults
-          title="Sem clientes a mostrar"
-          message="Ajuste o termo de pesquisa ou filtros"
-        />
-      )}
+      {/* VideoStatisticBlock */}
+      {/* VideosTable */}
     </div>
   );
 }

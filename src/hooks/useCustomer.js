@@ -25,6 +25,7 @@ export function useCustomer(idCustomer) {
         setCustomer(data);
         setError(error);
         setLoad(false);
+        console.log(data)
     }, [idCustomer]);
 
     useEffect(() => { fetchCustomer(); }, [fetchCustomer]);

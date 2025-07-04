@@ -10,12 +10,12 @@ import FormActions from "./ui/FormActions";
 import SchedulePicker from "./ui/SchedulePicker";
 import Loading from "../ui/Loading";
 
-export default function DeviceForm({
+const DeviceForm = ({
   initialValues = {},
   onSubmit,
   cancelPath = "#",
   submitLabel = "Guardar",
-}) {
+}) => {
   /* ─────────── state controlado ─────────── */
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -142,4 +142,6 @@ export default function DeviceForm({
       />
     </form>
   );
-}
+};
+
+export default DeviceForm;
