@@ -22,6 +22,7 @@ import AddVideoPage from "./pages/videos/AddVideoPage.jsx";
 
 // Other
 import { Toaster } from "react-hot-toast";
+import EditCustomerPage from "./pages/customers/EditCustomerPage.jsx";
 
 const App = () => (
   <BrowserRouter>
@@ -55,6 +56,10 @@ const App = () => (
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/customers/add" element={<AddCustomerPage />} />
           <Route path="/customers/:idCustomer" element={<CustomerPage />} />
+          <Route
+            path="/customers/:idCustomer/edit"
+            element={<EditCustomerPage />}
+          />
           {/* ---Videos----------------------- */}
           <Route
             path="/customers/:idCustomer/videos/add"

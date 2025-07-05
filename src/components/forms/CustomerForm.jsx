@@ -53,7 +53,7 @@ export default function CustomerForm({
 
     setContractStartDate(initialValues.contract_start_date ?? "");
     setContractEndDate(initialValues.contract_end_date ?? "");
-    setContractValue(initialValues.contact_value ?? "");
+    setContractValue(initialValues.contract_value ?? "");
     setContractPoints(initialValues.contract_points ?? "");
     setContractType(initialValues.contract_type ?? "");
 

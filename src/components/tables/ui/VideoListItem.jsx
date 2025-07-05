@@ -1,4 +1,4 @@
-import { Video, BarChart2, Edit2, Trash2 } from "lucide-react";
+import { Video, Edit2, Trash2 } from "lucide-react";
 import clsx from "clsx";
 
 export default function VideoListItem({ video }) {
