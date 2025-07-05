@@ -33,7 +33,9 @@ export function useCustomerVideos(customerId) {
           device_id,
           device(
             id,
-            site_id
+            site_id,
+            name,
+            location
           )
         )
       `)
@@ -91,6 +93,7 @@ export function useCustomerVideos(customerId) {
         const deactiveVideos = allVideos.filter(v => v.video_status === "deactive");
 
         return {
+            allVideos,
             activeVideos,
             pausedVideos,
             deactiveVideos,

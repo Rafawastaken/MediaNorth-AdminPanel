@@ -75,9 +75,11 @@ const CustomerDetailsCard = ({ customer }) => {
 
   return (
     <div className="flex flex-col gap-2 px-4 py-3 mt-4 bg-white rounded-md shadow-sm border-l-3 border-l-blue-500 ">
-      <div className="flex gap-2 items-center font-bold">
+      <div className="flex gap-2 items-center">
         <User2 size={20} />{" "}
-        <h1 className="capitalize text-xl">{customer.company_name}</h1>
+        <h1 className="capitalize text-xl font-bold">
+          {customer.company_name}
+        </h1>
         <span
           className={`rounded-full px-3 py-1 text-xs font-medium 
             ${

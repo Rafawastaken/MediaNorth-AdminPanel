@@ -6,6 +6,7 @@ import { useCustomerVideos } from "../../hooks/useCustomerVideos";
 import { HeadingButtonAndBack } from "../../components/ui/Headings";
 import CustomerDetailsCard from "../../components/cards/CustomerDetailsCard";
 import CustomerVideoStatsBlock from "../../components/blocks/CustomerVideoStatsBlock";
+import VideosTable from "../../components/tables/VideosTable";
 
 export default function CustomersPage() {
   const { idCustomer } = useParams();
@@ -47,6 +48,7 @@ export default function CustomersPage() {
       />
       <CustomerDetailsCard customer={customer} />
       <CustomerVideoStatsBlock videos={videos} stats={stats} />
+      <VideosTable videos={videos} />
     </div>
   );
 }
