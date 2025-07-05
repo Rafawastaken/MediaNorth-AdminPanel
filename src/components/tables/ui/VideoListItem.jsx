@@ -82,9 +82,6 @@ export default function VideoListItem({ video }) {
 
       {/* ações */}
       <div className="ml-auto flex shrink-0 gap-2">
-        <IconBtn title="Analytics">
-          <BarChart2 size={16} />
-        </IconBtn>
         <IconBtn title="Editar">
           <Edit2 size={16} />
         </IconBtn>

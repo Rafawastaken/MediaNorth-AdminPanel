@@ -9,14 +9,14 @@ import { FormInputCol, FormInputRow } from "./ui/Input";
 import FormSection from "./ui/FormSection";
 import FormActions from "./ui/FormActions";
 
-export default function VideoForm({
+const VideoForm = ({
   initialValues = {},
   onSubmit,
   cancelPath = "#",
   submitLabel = "Guardar",
   customerId,
   devices = [], // TVs ativas vindas do pai
-}) {
+}) => {
   /* ---------- Vídeo ---------- */
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
@@ -201,4 +201,6 @@ export default function VideoForm({
       />
     </form>
   );
-}
+};
+
+export default VideoForm;

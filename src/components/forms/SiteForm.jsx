@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { BookPlus, ReceiptEuro, UserPlus, Save } from "lucide-react";
+import { BookPlus, ReceiptEuro, UserPlus, Save, User } from "lucide-react";
+import FormSection from "./ui/FormSection";
 import { FormInputCol, FormInputRow } from "./ui/Input";
 import FormActions from "./ui/FormActions";
 import Loading from "../ui/Loading";
@@ -61,16 +62,7 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
   return (
     <form className={"flex flex-col gap-5 mt-5 w-full"} onSubmit={handleSubmit}>
       {/*--Site Information ---------------------------------- */}
-      <div
-        className={
-          "px-3 py-4 shadow-sm rounded-lg flex flex-col gap-4 bg-gray-50 w-full ring-1 ring-slate-200"
-        }
-      >
-        <div className="flex items-center gap-2 ">
-          <BookPlus />
-          <h1 className={"text-xl font-semibold"}>Informações Local</h1>
-        </div>
-
+      <FormSection icon={BookPlus} title={"Informações de Local"}>
         <div className="flex w-full gap-3 mt-2">
           {/*--Nome do Local ---------------------------------- */}
           <FormInputCol
@@ -98,10 +90,11 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
             "Quinta Baker, Estrada Rural 4, Dulvey Parish, Louisiana"
           }
           required={true}
+          className={"mt-2"}
         />
 
         {/*--Tipo do Local ---------------------------------- */}
-        <div className={"flex flex-col items-start gap-1 flex-1"}>
+        <div className={"flex flex-col items-start gap-1 flex-1 mt-2"}>
           <label htmlFor="siteType" className="text-sm font-medium">
             Tipo de Local*
           </label>
@@ -122,18 +115,10 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
             <option value="other">Outro</option>
           </select>
         </div>
-      </div>
+      </FormSection>
 
       {/*--Contact Information ---------------------------------- */}
-      <div
-        className={
-          "px-3 py-4 shadow-sm rounded-lg flex flex-col gap-4 bg-gray-50 w-full ring-1 ring-slate-200"
-        }
-      >
-        <div className="flex items-center gap-2 ">
-          <UserPlus />
-          <h1 className={"text-xl font-semibold"}>Informações Contacto</h1>
-        </div>
+      <FormSection icon={UserPlus} title={"Informações do Contacto"}>
         {/*--Contact Name Contact Email ---------------------------------- */}
         <div className="flex w-full gap-3 mt-2">
           {/*--Contact Name ---------------------------------- */}
@@ -161,19 +146,12 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
           placeholder={"aashford@umbrella-corp.pt"}
           required={true}
           type="email"
+          className={"mt-2"}
         />
-      </div>
+      </FormSection>
 
       {/*--Contract Information ---------------------------------- */}
-      <div
-        className={
-          "px-3 py-4 shadow-sm rounded-lg flex flex-col gap-4 bg-gray-50 w-full ring-1 ring-slate-200"
-        }
-      >
-        <div className="flex items-center gap-2 ">
-          <ReceiptEuro />
-          <h1 className={"text-xl font-semibold"}>Informações Contracto</h1>
-        </div>
+      <FormSection icon={ReceiptEuro} title={"Informações de Contrato"}>
         {/*--Contact Type and Value ---------------------------------- */}
         <div className="flex w-full gap-3 mt-2">
           <div className={"flex flex-col items-start gap-1 flex-1"}>
@@ -213,8 +191,9 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
             "Infraestrutura isolada. Inclui monitorização B.O.W. e segurança nível 5. Contrato confidencial."
           }
           type="text"
+          className={"mt-2"}
         />
-      </div>
+      </FormSection>
 
       <FormActions
         cancelPath={cancelPath}
