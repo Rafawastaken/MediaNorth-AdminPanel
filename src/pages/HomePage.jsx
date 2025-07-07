@@ -9,7 +9,7 @@ const HomePage = () => (
       title="Dashboard"
       subtitle="Visão geral do sistema de gestão de anúncios"
     />
-    <StatisticsBlock /> {/* já faz os seus fetches de contagem */}
+    <StatisticsBlock />
     <WarningsBlock />
     <LogsTable />
   </div>

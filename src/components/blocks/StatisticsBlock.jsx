@@ -1,24 +1,31 @@
-// src/components/blocks/StatisticsBlock.jsx
 import { useMemo } from "react";
 import StatisticCard from "../cards/StatisticCard";
-import { Tv, Users, MapPin, ChartArea } from "lucide-react";
+import { Tv, Users, MapPin, Film } from "lucide-react";
 import Colors from "../../constants/Colors";
 
 import { useDeviceStats } from "../../hooks/useDeviceStats";
 import { useSiteData } from "../../hooks/useSiteData";
+import { useCustomerStats } from "../../hooks/useCustomerStats";
+import { useVideoStats } from "../../hooks/useVideoStats";
 import { computeSiteStats } from "../../helpers/computeSiteStats";
 
 export default function StatisticsBlock() {
-  /* TVs */
+  /* TVs -------------------------------------------------- */
   const { stats: tv, loading: tvLoad } = useDeviceStats();
 
-  /* Locais */
+  /* Clientes --------------------------------------------- */
+  const { stats: cust, loading: custLoad } = useCustomerStats();
+
+  /* Locais ------------------------------------------------ */
   const { sites, loading: siteLoad } = useSiteData();
-  const site = useMemo(() => computeSiteStats(sites), [sites]); // { total, active, diff, pct }
+  const site = useMemo(() => computeSiteStats(sites), [sites]);
+
+  /* Vídeos ------------------------------------------------ */
+  const { stats: vid, loading: vidLoad } = useVideoStats();
 
   return (
     <div className="mt-6 grid w-full grid-cols-4 gap-6">
-      {/* ───────── TVs ───────── */}
+      {/* TVs ------------------------------------------------ */}
       <StatisticCard
         title="TVs Ativas"
         loading={tvLoad}
@@ -33,17 +40,22 @@ export default function StatisticsBlock() {
         icon={<Tv size={16} />}
       />
 
-      {/* ───────── Clientes (placeholder) ───────── */}
+      {/* Clientes ------------------------------------------ */}
       <StatisticCard
         title="Clientes Ativos"
-        value={156}
-        subtitle="12 clientes inativos"
-        resume="+8% vs mês anterior"
+        loading={custLoad}
+        value={cust.active}
+        subtitle={custLoad ? "—" : `${cust.inactive} clientes inativos`}
+        resume={
+          cust.total && !custLoad
+            ? `${Math.round((cust.active / cust.total) * 100)}% do total`
+            : null
+        }
         color={Colors.blue}
         icon={<Users size={16} />}
       />
 
-      {/* ───────── Locais ───────── */}
+      {/* Locais -------------------------------------------- */}
       <StatisticCard
         title="Locais/Pontos"
         loading={siteLoad}
@@ -58,14 +70,21 @@ export default function StatisticsBlock() {
         icon={<MapPin size={16} />}
       />
 
-      {/* ───────── Anúncios (placeholder) ───────── */}
+      {/* Vídeos -------------------------------------------- */}
       <StatisticCard
-        title="Anúncios Ativos"
-        value={156}
-        subtitle="12 anúncios expirados"
-        resume="+8% vs mês anterior"
+        title="Vídeos Ativos"
+        loading={vidLoad}
+        value={vid.active}
+        subtitle={
+          vidLoad ? "—" : `${vid.deactive} expirados · ${vid.paused} pausados`
+        }
+        resume={
+          vid.total && !vidLoad
+            ? `${Math.round((vid.active / vid.total) * 100)}% do total`
+            : null
+        }
         color={Colors.orange}
-        icon={<ChartArea size={16} />}
+        icon={<Film size={16} />}
       />
     </div>
   );

@@ -1,88 +1,110 @@
 import WarningCard from "../cards/WarningCard";
 import { AlertTriangle, Clock3, ChartArea } from "lucide-react";
+import Colors from "../../constants/Colors";
+import Loading from "../ui/Loading";
+import { toast } from "react-hot-toast";
+import { useWarningsData } from "../../hooks/useWarningsData";
 
-const WarningsBlock = () => {
+export default function WarningsBlock() {
+  const {
+    tvsOffline,
+    adLoad,
+    contractsEnding, // ← NEW
+    loading,
+    error,
+  } = useWarningsData();
+
+  if (loading) return <Loading message="A analisar avisos…" full />;
+  if (error) {
+    toast.error(`Avisos: ${error.message}`);
+    return null;
+  }
+
+  /* ---------- TVs off-line ---------- */
+  const offlineRows = tvsOffline.slice(0, 3).map((t) => ({
+    text: t.name ?? `TV #${t.id}`,
+    label: "Offline",
+    labelBgColor: Colors.red + "20",
+    labelTextColor: Colors.red,
+  }));
+
+  const offlineContent =
+    offlineRows.length > 0
+      ? offlineRows
+      : [
+          {
+            text: "Todas online",
+            label: "✓",
+            labelBgColor: "#d1fae5",
+            labelTextColor: "#065f46",
+          },
+        ];
+
+  /* ---------- Contratos a terminar ---------- */
+  const contractContent =
+    contractsEnding.length > 0
+      ? contractsEnding.map((c) => ({
+          text: c.company_name,
+          label:
+            c.daysLeft < 0
+              ? "Expirado"
+              : `${c.daysLeft} dia${c.daysLeft === 1 ? "" : "s"}`,
+          labelBgColor: c.daysLeft < 0 ? "#fee2e2" : "rgba(0,0,0,0)",
+          labelTextColor: c.daysLeft < 0 ? Colors.red : "#555",
+        }))
+      : [
+          {
+            text: "Nenhum contrato a terminar",
+            label: "—",
+            labelBgColor: "rgba(0,0,0,0)",
+            labelTextColor: "#555",
+          },
+        ];
+
   return (
-    <div className="grid grid-cols-3 mt-6 items-center justify-center gap-6 w-full">
+    <div className="mt-6 grid w-full grid-cols-3 gap-6">
+      {/* TVs Inativas ------------------------------------------------ */}
       <WarningCard
         title="TVs Inativas"
-        borderColor="#ef4444" // red-500
+        borderColor={Colors.red}
         icon={<AlertTriangle size={18} className="text-red-500" />}
-        content={[
-          {
-            text: "Centro Comercial A",
-            label: "Offline",
-            labelBgColor: "#ef444420",
-            labelTextColor: "#ef4444",
-          },
-          {
-            text: "Shopping Mall B",
-            label: "Offline",
-            labelBgColor: "#ef444420",
-            labelTextColor: "#ef4444",
-          },
-          {
-            text: "Praça Central",
-            label: "Offline",
-            labelBgColor: "#ef444420",
-            labelTextColor: "#ef4444",
-          },
-        ]}
+        content={offlineContent}
       />
 
+      {/* Anúncios / Contratos a terminar ---------------------------- */}
       <WarningCard
-        title="Anúncios Finalizando"
-        borderColor="#EBB611FF" // red-500
+        title="Contratos a Terminar"
+        borderColor="#FACC15"
         icon={<Clock3 size={18} className="text-yellow-600" />}
-        content={[
-          {
-            text: "Empresa XYZ",
-            label: "2 dias",
-            labelBgColor: "rgba(0,0,0,0)",
-            labelTextColor: "#454545",
-          },
-          {
-            text: "Shopping Mall B",
-            label: "1 dia",
-            labelBgColor: "rgba(0,0,0,0)",
-            labelTextColor: "#454545",
-          },
-          {
-            text: "Praça Central",
-            label: "5 dias",
-            labelBgColor: "rgba(0,0,0,0)",
-            labelTextColor: "#454545",
-          },
-        ]}
+        content={contractContent}
       />
 
+      {/* Status de TVs (carga de anúncios) -------------------------- */}
       <WarningCard
-        title="TVs Inativas"
-        borderColor="#4182f1" // red-500
+        title="Status de TVs"
+        borderColor="#3B82F6"
         icon={<ChartArea size={18} className="text-blue-500" />}
         content={[
           {
             text: "Muitos anúncios",
-            label: "8 TVs",
-            labelBgColor: "rgb(251,243,194)",
-            labelTextColor: "#7a6902",
+            label: `${adLoad.many} TVs`,
+            labelBgColor: "rgb(254,226,226)",
+            labelTextColor: Colors.red,
           },
           {
             text: "Poucos anúncios",
-            label: "4 TVs",
-            labelBgColor: "#e3f0ff",
-            labelTextColor: "#044fb3",
+            label: `${adLoad.few} TVs`,
+            labelBgColor: "rgb(224,231,255)",
+            labelTextColor: "#283593",
           },
           {
             text: "Balanceadas",
-            label: "100 TVs",
-            labelBgColor: "rgb(211,248,211)",
-            labelTextColor: "#068706",
+            label: `${adLoad.balanced} TVs`,
+            labelBgColor: "rgb(209,250,229)",
+            labelTextColor: "#065f46",
           },
         ]}
       />
     </div>
   );
-};
-
-export default WarningsBlock;
+}
