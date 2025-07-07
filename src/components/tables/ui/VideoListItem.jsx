@@ -1,7 +1,8 @@
 import { Video, Edit2, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import clsx from "clsx";
 
-export default function VideoListItem({ video }) {
+export default function VideoListItem({ video, idCustomer }) {
   const {
     id,
     video_title,
@@ -42,14 +43,15 @@ export default function VideoListItem({ video }) {
       <div className="flex flex-1 flex-col">
         {/* título + badge */}
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="font-semibold">{video_title}</h3>
+          <h3 className="font-semibold">
+            {video_title} {idCustomer}
+          </h3>
           <span
             className={clsx("rounded-full px-2 py-0.5 text-xs", statusCfg.cls)}
           >
             {statusCfg.txt}
           </span>
         </div>
-
         {/* linha info 1 */}
         <div className="mt-1 flex flex-wrap gap-6 text-sm text-slate-600">
           <span>
@@ -82,25 +84,19 @@ export default function VideoListItem({ video }) {
 
       {/* ações */}
       <div className="ml-auto flex shrink-0 gap-2">
-        <IconBtn title="Editar">
+        <Link
+          className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
+          to={`/customers/${idCustomer}/videos/${id}/edit`}
+        >
           <Edit2 size={16} />
-        </IconBtn>
-        <IconBtn title="Apagar">
+        </Link>
+        <Link
+          className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
+          to={location ? location : "#"}
+        >
           <Trash2 size={16} />
-        </IconBtn>
+        </Link>
       </div>
     </div>
-  );
-}
-
-/* helper p/ não repetir classes */
-function IconBtn({ title, children }) {
-  return (
-    <button
-      className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
-      title={title}
-    >
-      {children}
-    </button>
   );
 }

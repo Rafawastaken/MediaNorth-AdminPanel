@@ -1,15 +1,22 @@
-import { useState } from "react";
-import { BookPlus, ReceiptEuro, UserPlus, Save, User } from "lucide-react";
-import FormSection from "./ui/FormSection";
-import { FormInputCol, FormInputRow } from "./ui/Input";
-import FormActions from "./ui/FormActions";
-import Loading from "../ui/Loading";
-import { Link, useNavigate } from "react-router-dom";
+// src/components/forms/SiteForm.jsx
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { BookPlus, ReceiptEuro, UserPlus } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { useSites } from "../../hooks/useSites";
 
-const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
-  // Form values
+import FormSection from "./ui/FormSection";
+import FormActions from "./ui/FormActions";
+import { FormInputCol, FormInputRow } from "./ui/Input";
+import Loading from "../ui/Loading";
+
+export default function SiteForm({
+  initialValues = {}, // {} = criar · {…} = editar
+  onSubmit, // (payload) => Promise
+  cancelPath = "#",
+  submitLabel = "Guardar",
+  cancelLabel = "Cancelar",
+}) {
+  /* ---------------- estado ---------------- */
   const [siteName, setSiteName] = useState("");
   const [vatNumber, setVatNumber] = useState("");
   const [siteAddress, setSiteAddress] = useState("");
@@ -19,17 +26,41 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
   const [contactEmail, setContactEmail] = useState("");
   const [contractType, setContractType] = useState("");
   const [contractValue, setContractValue] = useState("");
-  const [contractObservations, setContractObservations] = useState("");
+  const [observations, setObservations] = useState("");
+
   const [loading, setLoading] = useState(false);
-
-  const { addSite } = useSites();
-
   const navigate = useNavigate();
 
-  // submit form
+  /* -------- preencher ao entrar em edição -------- */
+  useEffect(() => {
+    setSiteName(initialValues.name ?? "");
+    setVatNumber(initialValues.vat ?? "");
+    setSiteAddress(initialValues.address ?? "");
+    setSiteType(initialValues.site_type ?? "");
+    setContactName(initialValues.contact_name ?? "");
+    setContactPhone(initialValues.contact_phone ?? "");
+    setContactEmail(initialValues.contact_email ?? "");
+    setContractType(initialValues.contract_type ?? "");
+    setContractValue(initialValues.contract_value ?? "");
+    setObservations(initialValues.observations ?? "");
+  }, [initialValues?.id]);
+
+  /* ---------------- submit ---------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+
+    if (
+      !siteName ||
+      !siteAddress ||
+      !siteType ||
+      !contactName ||
+      !contactPhone ||
+      !contactEmail ||
+      !contractType
+    ) {
+      toast.error("Preenche todos os campos obrigatórios.");
+      return;
+    }
 
     const payload = {
       name: siteName.trim(),
@@ -40,168 +71,144 @@ const AddSiteForm = ({ cancelPath, cancelLabel, submitLabel }) => {
       contact_phone: contactPhone.trim(),
       contact_email: contactEmail.trim(),
       contract_type: contractType,
-      contract_value: contractValue || null,
-      observations: contractObservations || null,
+      contract_value: contractValue.trim() || null,
+      observations: observations.trim() || null,
     };
 
     try {
-      await addSite(payload);
-      toast.success(`Localização “${siteName}” criada com sucesso`);
-      navigate("/sites");
+      setLoading(true);
+      await onSubmit(payload);
+      navigate(cancelPath);
     } catch (err) {
-      toast.error(`Erro ao criar localização: ${err.message}`);
+      toast.error(`Erro: ${err.message}`);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return <Loading message="A Guardar Sitio..." full />;
-  }
+  if (loading) return <Loading message="A guardar local…" full />;
 
+  /* ---------------- UI ---------------- */
   return (
-    <form className={"flex flex-col gap-5 mt-5 w-full"} onSubmit={handleSubmit}>
-      {/*--Site Information ---------------------------------- */}
-      <FormSection icon={BookPlus} title={"Informações de Local"}>
-        <div className="flex w-full gap-3 mt-2">
-          {/*--Nome do Local ---------------------------------- */}
+    <form onSubmit={handleSubmit} className="mt-5 flex w-full flex-col gap-5">
+      {/* ——— Informação do local ——— */}
+      <FormSection icon={BookPlus} title="Informações do Local">
+        <div className="mt-2 flex gap-3">
           <FormInputCol
             value={siteName}
             onChange={setSiteName}
-            label={"Nome do Local *"}
-            placeholder={"Estação de Pesquisa Dulvey"}
-            required={true}
+            label="Nome do Local *"
+            placeholder="Centro Comercial X"
+            required
           />
-          {/*--Nif ---------------------------------- */}
           <FormInputCol
             value={vatNumber}
             onChange={setVatNumber}
-            label={"NIF"}
-            placeholder={"999888777"}
+            label="NIF"
+            placeholder="512345678"
             type="number"
           />
         </div>
-        {/*--Morada do Local ---------------------------------- */}
+
         <FormInputRow
+          className="mt-2"
           value={siteAddress}
           onChange={setSiteAddress}
-          label={"Morada *"}
-          placeholder={
-            "Quinta Baker, Estrada Rural 4, Dulvey Parish, Louisiana"
-          }
-          required={true}
-          className={"mt-2"}
+          label="Morada *"
+          placeholder="Rua Exemplo 1, Lisboa"
+          required
         />
 
-        {/*--Tipo do Local ---------------------------------- */}
-        <div className={"flex flex-col items-start gap-1 flex-1 mt-2"}>
-          <label htmlFor="siteType" className="text-sm font-medium">
-            Tipo de Local*
-          </label>
+        <div className="mt-2 flex flex-col gap-1">
+          <label className="text-sm font-medium">Tipo de Local *</label>
           <select
-            id="siteType"
-            onChange={(e) => setSiteType(e.target.value)}
-            className="text-sm font-normal border-1 border-gray-200 w-full px-2 py-2 rounded-md"
             value={siteType}
+            onChange={(e) => setSiteType(e.target.value)}
+            className="rounded-md border px-2 py-2 text-sm"
+            required
           >
-            <option value={""} selected>
-              Selecionar tipo
-            </option>
+            <option value="">Selecionar tipo</option>
             <option value="shoppingCenter">Centro Comercial</option>
             <option value="publicSpace">Espaço Público</option>
             <option value="restaurante">Restaurante</option>
             <option value="hotel">Hotel</option>
-            <option value="office">Escritorio</option>
+            <option value="office">Escritório</option>
             <option value="other">Outro</option>
           </select>
         </div>
       </FormSection>
 
-      {/*--Contact Information ---------------------------------- */}
-      <FormSection icon={UserPlus} title={"Informações do Contacto"}>
-        {/*--Contact Name Contact Email ---------------------------------- */}
-        <div className="flex w-full gap-3 mt-2">
-          {/*--Contact Name ---------------------------------- */}
+      {/* ——— Contacto ——— */}
+      <FormSection icon={UserPlus} title="Informações do Contacto">
+        <div className="mt-2 flex gap-3">
           <FormInputCol
             value={contactName}
             onChange={setContactName}
-            placeholder={"Dr. Alexia Ashford"}
-            label={"Responsável *"}
-            required={true}
+            label="Responsável *"
+            placeholder="João Silva"
+            required
           />
-          {/*--Contact Phone number  ---------------------------------- */}
           <FormInputCol
             value={contactPhone}
             onChange={setContactPhone}
-            placeholder={"934112776"}
-            label={"Contacto *"}
-            required={true}
+            label="Contacto *"
+            placeholder="912345678"
+            required
           />
         </div>
 
         <FormInputRow
+          className="mt-2"
           value={contactEmail}
           onChange={setContactEmail}
-          label={"Email *"}
-          placeholder={"aashford@umbrella-corp.pt"}
-          required={true}
+          label="Email *"
+          placeholder="joao@mail.com"
           type="email"
-          className={"mt-2"}
+          required
         />
       </FormSection>
 
-      {/*--Contract Information ---------------------------------- */}
-      <FormSection icon={ReceiptEuro} title={"Informações de Contrato"}>
-        {/*--Contact Type and Value ---------------------------------- */}
-        <div className="flex w-full gap-3 mt-2">
-          <div className={"flex flex-col items-start gap-1 flex-1"}>
-            <label htmlFor="siteType" className="text-sm font-medium">
-              Tipo de Contracto *
-            </label>
+      {/* ——— Contrato ——— */}
+      <FormSection icon={ReceiptEuro} title="Informações de Contrato">
+        <div className="mt-2 flex gap-3">
+          <div className="flex flex-1 flex-col gap-1">
+            <label className="text-sm font-medium">Tipo de Contrato *</label>
             <select
-              id="contractType"
-              onChange={(e) => setContractType(e.target.value)}
-              className="text-sm font-normal border-1 border-gray-200 w-full px-2 py-2 rounded-md"
               value={contractType}
+              onChange={(e) => setContractType(e.target.value)}
+              className="rounded-md border px-2 py-2 text-sm"
               required
             >
-              <option value={""} selected>
-                Selecionar tipo de contracto
-              </option>
+              <option value="">Selecionar tipo</option>
               <option value="fixedValue">Valor Fixo</option>
               <option value="sellingPercentage">Percentagem</option>
               <option value="free">Gratuito</option>
             </select>
           </div>
 
-          {/*--Contact Value ---------------------------------- */}
           <FormInputCol
-            label={"Valor Mensal"}
-            onChange={setContractValue}
             value={contractValue}
-            placeholder={"120000€ ou 50%"}
+            onChange={setContractValue}
+            label="Valor Mensal"
+            placeholder="1200€ ou 15%"
           />
         </div>
-        {/*--Contact Obs ---------------------------------- */}
+
         <FormInputRow
-          value={contractObservations}
-          onChange={setContractObservations}
-          label={"Observações"}
-          placeholder={
-            "Infraestrutura isolada. Inclui monitorização B.O.W. e segurança nível 5. Contrato confidencial."
-          }
-          type="text"
-          className={"mt-2"}
+          className="mt-2"
+          value={observations}
+          onChange={setObservations}
+          label="Observações"
+          placeholder="Infraestrutura isolada, contrato confidencial, …"
         />
       </FormSection>
 
+      {/* ——— Botões ——— */}
       <FormActions
         cancelPath={cancelPath}
-        submitLabel={submitLabel}
         cancelLabel={cancelLabel}
+        submitLabel={submitLabel}
       />
     </form>
   );
-};
-
-export default AddSiteForm;
+}

@@ -123,12 +123,13 @@ export default function SiteCard({ site }) {
         >
           <Tv2 size={16} /> TVs
         </Link>
-        <button
+        <Link
           className="rounded-lg border-1 border-gray-200 p-2 hover:bg-slate-50"
           aria-label="Editar"
+          to={`/site/${site.id}/edit`}
         >
           <Pencil size={16} />
-        </button>
+        </Link>
         <button
           className="rounded-lg border-1 border-gray-200 p-2 hover:bg-slate-50"
           aria-label="Apagar"

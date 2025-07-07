@@ -48,7 +48,7 @@ export default function CustomersPage() {
       />
       <CustomerDetailsCard customer={customer} />
       <CustomerVideoStatsBlock videos={videos} stats={stats} />
-      <VideosTable videos={videos} />
+      <VideosTable videos={videos} idCustomer={idCustomer} />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { HeadingStandardBack } from "../../components/ui/Headings";
 import { pickDevice } from "../../helpers/pickDevice"; // se quiseres num ficheiro
 import { useDevice } from "../../hooks/useDevice";
 
-export default function EditDevicePage() {
+const EditDevicePage = () => {
   const { idSite, idDevice } = useParams();
   const { site, devices, loading, error } = useSiteDetailsWithId(idSite);
   const { updateDevice } = useDevice(idDevice);
@@ -35,4 +35,6 @@ export default function EditDevicePage() {
       />
     </div>
   );
-}
+};
+
+export default EditDevicePage;
