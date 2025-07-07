@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useActiveDevices } from "../../hooks/useActiveDevices";
-import { saveVideo } from "../../service/video";
+import { saveVideo } from "../../services/video";
 
 import { HeadingStandardBack } from "../../components/ui/Headings";
 import VideoForm from "../../components/forms/VideoForm";

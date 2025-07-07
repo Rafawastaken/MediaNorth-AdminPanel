@@ -1,21 +1,25 @@
-import { HeadingStandardBack } from "../../components/ui/Headings.jsx";
-import SiteForm from "../../components/forms/SiteForm.jsx";
+// src/pages/sites/AddSitePage.jsx
+import { HeadingStandardBack } from "../../components/ui/Headings";
+import SiteForm from "../../components/forms/SiteForm";
+import { useSites } from "../../hooks/useSites";
 
-const AddSitePage = () => {
+export default function AddSitePage() {
+  const { addSite } = useSites(); // <-- pega o addSite
+
   return (
-    <div className={"max-w-6xl mx-auto"}>
+    <div className="mx-auto max-w-6xl">
       <HeadingStandardBack
-        title={"Adicionar Novo Local"}
-        subtitle={"Preencha as informações do novo local/ponto de exibição"}
+        title="Adicionar Novo Local"
+        subtitle="Preencha as informações do novo local/ponto de exibição"
         path="/sites"
       />
+
       <SiteForm
-        cancelPath={"/sites"}
-        cancelLabel={"Cancelar"}
-        submitLabel={"Guardar"}
+        onSubmit={addSite}
+        cancelPath="/sites"
+        cancelLabel="Cancelar"
+        submitLabel="Guardar"
       />
     </div>
   );
-};
-
-export default AddSitePage;
+}

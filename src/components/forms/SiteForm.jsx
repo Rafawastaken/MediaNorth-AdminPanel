@@ -8,15 +8,16 @@ import FormSection from "./ui/FormSection";
 import FormActions from "./ui/FormActions";
 import { FormInputCol, FormInputRow } from "./ui/Input";
 import Loading from "../ui/Loading";
+import { logEvent } from "../../services/logEvent";
 
 export default function SiteForm({
-  initialValues = {}, // {} = criar · {…} = editar
-  onSubmit, // (payload) => Promise
+  initialValues = {}, // {} ⇒ criar  ·  {…} ⇒ editar
+  onSubmit, // deve devolver o id do site criado/alterado
   cancelPath = "#",
   submitLabel = "Guardar",
   cancelLabel = "Cancelar",
 }) {
-  /* ---------------- estado ---------------- */
+  /* ---------- estado ---------- */
   const [siteName, setSiteName] = useState("");
   const [vatNumber, setVatNumber] = useState("");
   const [siteAddress, setSiteAddress] = useState("");
@@ -27,11 +28,11 @@ export default function SiteForm({
   const [contractType, setContractType] = useState("");
   const [contractValue, setContractValue] = useState("");
   const [observations, setObservations] = useState("");
-
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  /* -------- preencher ao entrar em edição -------- */
+  /* ---------- preencher se edição ---------- */
   useEffect(() => {
     setSiteName(initialValues.name ?? "");
     setVatNumber(initialValues.vat ?? "");
@@ -45,10 +46,11 @@ export default function SiteForm({
     setObservations(initialValues.observations ?? "");
   }, [initialValues?.id]);
 
-  /* ---------------- submit ---------------- */
+  /* ---------- submit ---------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    /* validações mínimas */
     if (
       !siteName ||
       !siteAddress ||
@@ -75,9 +77,29 @@ export default function SiteForm({
       observations: observations.trim() || null,
     };
 
+    const creating = !initialValues.id;
+
     try {
       setLoading(true);
-      await onSubmit(payload);
+
+      /* espera que onSubmit devolva o id do registo */
+      const siteId = await onSubmit(payload);
+
+      /* ---------- log ---------- */
+      await logEvent({
+        type: creating ? "site_created" : "site_updated",
+        summary: `${creating ? "Criado" : "Actualizado"} local “${
+          payload.name
+        }”`,
+        details: payload,
+        context: { site_id: siteId },
+      });
+
+      toast.success(
+        creating
+          ? `Local “${payload.name}” criado com sucesso.`
+          : `Local “${payload.name}” actualizado com sucesso.`
+      );
       navigate(cancelPath);
     } catch (err) {
       toast.error(`Erro: ${err.message}`);
@@ -88,10 +110,10 @@ export default function SiteForm({
 
   if (loading) return <Loading message="A guardar local…" full />;
 
-  /* ---------------- UI ---------------- */
+  /* ---------- UI ---------- */
   return (
     <form onSubmit={handleSubmit} className="mt-5 flex w-full flex-col gap-5">
-      {/* ——— Informação do local ——— */}
+      {/* —— Informações do Local —— */}
       <FormSection icon={BookPlus} title="Informações do Local">
         <div className="mt-2 flex gap-3">
           <FormInputCol
@@ -138,7 +160,7 @@ export default function SiteForm({
         </div>
       </FormSection>
 
-      {/* ——— Contacto ——— */}
+      {/* —— Contacto —— */}
       <FormSection icon={UserPlus} title="Informações do Contacto">
         <div className="mt-2 flex gap-3">
           <FormInputCol
@@ -168,7 +190,7 @@ export default function SiteForm({
         />
       </FormSection>
 
-      {/* ——— Contrato ——— */}
+      {/* —— Contrato —— */}
       <FormSection icon={ReceiptEuro} title="Informações de Contrato">
         <div className="mt-2 flex gap-3">
           <div className="flex flex-1 flex-col gap-1">
@@ -203,7 +225,7 @@ export default function SiteForm({
         />
       </FormSection>
 
-      {/* ——— Botões ——— */}
+      {/* —— Botões —— */}
       <FormActions
         cancelPath={cancelPath}
         cancelLabel={cancelLabel}
