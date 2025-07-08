@@ -13,12 +13,19 @@ const eventColor = {
   login: "#0ea5e9", // sky-500
   login_success: "#0ea5e9", // sky-500
   logout: "#0ea5e9",
+
   site_created: "#10b981", // emerald-500
   site_updated: "#3b82f6", // blue-500
+
   device_updated: "#3b82f6", // blue-500
   device_created: "#10b981", // emerald-500
+
+  customer_updated: "#3b82f6", // blue-500
+  customer_created: "#10b981", // emerald-500
+
   video_add: "#f59e0b", // amber-500
   video_update: "#fbbf24",
+
   device_offline: "#ef4444", // red-500
   default: "#64748b", // slate-500
 };
@@ -28,14 +35,19 @@ const eventLabel = {
   login: "Sessão iniciada",
   login_success: "Sessão iniciada",
   logout: "Sessão terminada",
+
   site_created: "Local criado",
   site_updated: "Local atualizado",
+
   device_created: "Dispositivo criado",
   device_updated: "Dispositivo atualizado",
+
   video_add: "Vídeo adicionado",
   video_update: "Vídeo atualizado",
+
   customer_created: "Cliente criado",
   customer_edited: "Cliente atualizado",
+
   device_offline: "TV offline",
 };
 

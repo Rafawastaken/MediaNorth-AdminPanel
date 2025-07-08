@@ -1,21 +1,20 @@
-// src/hooks/useCustomer.js
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../libs/supabase";
 
 /**
- * Se `idCustomer` for undefined ⇒ só devolve addCustomer (criar).
- * Se `idCustomer` tiver valor   ⇒ devolve também customer + update.
+ * Se `idCustomer` for omitido devolve só addCustomer().
+ * Se existir devolve também o registo + updateCustomer().
  */
 export function useCustomer(idCustomer) {
     const [customer, setCustomer] = useState(null);
     const [loading, setLoad] = useState(!!idCustomer);
     const [error, setError] = useState(null);
 
-    /* ---------- fetch único ---------- */
+    /* ---------- GET ---------- */
     const fetchCustomer = useCallback(async () => {
         if (!idCustomer) return;
-
         setLoad(true);
+
         const { data, error } = await supabase
             .from("customer")
             .select("*")
@@ -25,7 +24,6 @@ export function useCustomer(idCustomer) {
         setCustomer(data);
         setError(error);
         setLoad(false);
-        console.log(data)
     }, [idCustomer]);
 
     useEffect(() => { fetchCustomer(); }, [fetchCustomer]);
@@ -33,8 +31,15 @@ export function useCustomer(idCustomer) {
     /* ---------- ADD ---------- */
     const addCustomer = useCallback(async (fields) => {
         const payload = mapFieldsToSql(fields);
-        const { error } = await supabase.from("customer").insert(payload);
+
+        const { data, error } = await supabase
+            .from("customer")
+            .insert(payload)
+            .select("id")          // ← devolve logo o id
+            .single();
+
         if (error) throw error;
+        return data.id;         // devolvido ao formulário
     }, []);
 
     /* ---------- UPDATE ---------- */
@@ -48,19 +53,13 @@ export function useCustomer(idCustomer) {
             .eq("id", idCustomer);
 
         if (error) throw error;
-        await fetchCustomer();               // refresca cache local
+        await fetchCustomer();           // refresca cache
     }, [idCustomer, fetchCustomer]);
 
-    return {
-        customer,
-        loading,
-        error,
-        addCustomer,
-        updateCustomer,
-    };
+    return { customer, loading, error, addCustomer, updateCustomer };
 }
 
-/* ---- helper interno: JS → SQL ---- */
+/* ---------- helper JS → SQL ---------- */
 function mapFieldsToSql(f) {
     return {
         company_name: f.companyName.trim(),
@@ -70,11 +69,11 @@ function mapFieldsToSql(f) {
         company_website: f.companyWebsite.trim() || null,
         contact_name: f.contactName.trim(),
         contact_phone: f.contactPhone.trim(),
-        contact_email: f.contactEmail.trim() || null,
+        contact_email: f.contactEmail.trim().toLowerCase() || null,
         contract_start_date: f.contractStartDate,
         contract_end_date: f.contractEndDate,
-        contract_points: f.contractPoints || null,
         contract_value: f.contractValue,
+        contract_points: f.contractPoints || null,
         contract_type: f.contractType,
         observations: f.observations?.trim() || null,
     };

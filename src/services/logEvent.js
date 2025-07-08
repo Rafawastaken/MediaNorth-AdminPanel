@@ -1,41 +1,41 @@
+// src/services/logEvent.js
 import { supabase } from "../libs/supabase";
 
 /**
- * Regista um evento simples de log.
- *
- * @param {Object} opts
- * @param {string}  opts.type        – tipo de evento ('login', 'device_offline', …)
- * @param {string}  opts.summary     – texto curto
- * @param {Object}  [opts.details]   – payload extra (qualquer objecto)
- * @param {Object}  [opts.context]   – { user_id?, device_id?, site_id? … }
+ * Regista um evento no log.
+ * @param {string}  type
+ * @param {string}  summary
+ * @param {object} [details]
+ * @param {object} [context] – pode conter user_id, device_id, site_id, …
  */
-export async function logEvent({ type, summary, details = null, context = {} }) {
+export async function logEvent({ type, summary, details = {}, context = {} }) {
     try {
-        /* ─── 1) identifica utilizador autenticado ─── */
-        let userId = context.user_id;                // deixa o caller sobrepor
+        /* 1) utilizador autenticado (pode ser sobreposto) */
+        let userId = context.user_id;
         if (!userId) {
-            const {
-                data: { user },
-            } = await supabase.auth.getUser();
-            userId = user?.id ?? null;
+            const { data } = await supabase.auth.getUser();
+            userId = data?.user?.id ?? null;
         }
 
-        /* ─── 2) constrói payload ─── */
+        /* 2) separa campos reconhecidos ------------- */
+        const { device_id, /* ← existe como coluna */
+            ...extraCtx } = context;        // ← resto vai para JSON
+
+        /* 3) payload final -------------------------- */
         const payload = {
             event_type: type,
             summary,
-            details,
-            ...context,         // device_id, site_id, … (se existirem)
+            details: { ...details, context: extraCtx }, // JSONB
             user_id: userId,
-            ip_address: window?.__IP__ ?? null,        // se tiveres
+            device_id: device_id ?? null,
+            ip_address: window?.__IP__ ?? null,
             user_agent: navigator.userAgent,
         };
 
-        /* ─── 3) grava ─── */
         const { error } = await supabase.from("log_event").insert(payload);
         if (error) throw error;
     } catch (err) {
         console.error("Falhou gravação de log:", err);
-        // decide aqui se queres propagar o erro ou ignorar silentemente
+        /* não propagamos para não bloquear o fluxo da app */
     }
 }

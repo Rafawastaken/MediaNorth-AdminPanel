@@ -10,14 +10,18 @@ import ContractTypeInput from "./ui/ContractTypeInput";
 import { Building2, UserPlus, ReceiptEuro } from "lucide-react";
 import { FormInputCol, FormInputRow } from "./ui/Input";
 
-/* ---------- componente ---------- */
+import { logEvent } from "../../services/logEvent";
+
+/**
+ * Formulário de criação / edição de clientes
+ */
 export default function CustomerForm({
-  initialValues = {}, // {} = criar · { … } = editar
-  onSubmit, // (fields) => Promise
+  initialValues = {}, // {} = criar · {…} = editar
+  onSubmit, // (payload) => Promise → devolve id
   cancelPath = "#",
   submitLabel = "Guardar",
 }) {
-  /* ------ estado controlado ------ */
+  /* --------------- estado controlado --------------- */
   const [companyName, setCompanyName] = useState("");
   const [companyVat, setCompanyVat] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
@@ -35,11 +39,11 @@ export default function CustomerForm({
   const [contractType, setContractType] = useState("");
 
   const [observations, setObservations] = useState("");
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  /* ---------- pre-preenche em edição ---------- */
+  /* --------------- preencher em edição -------------- */
   useEffect(() => {
     setCompanyName(initialValues.company_name ?? "");
     setCompanyVat(initialValues.company_vat ?? "");
@@ -60,7 +64,7 @@ export default function CustomerForm({
     setObservations(initialValues.observations ?? "");
   }, [initialValues?.id]);
 
-  /* ---------- submit ---------- */
+  /* --------------- SUBMIT --------------------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -69,9 +73,13 @@ export default function CustomerForm({
       return;
     }
 
+    const creating = !initialValues.id;
+
     try {
       setLoading(true);
-      await onSubmit({
+
+      /* gravação ---------------------------------------------------- */
+      const customerId = await onSubmit({
         companyName,
         companyVat,
         companyAddress,
@@ -87,10 +95,43 @@ export default function CustomerForm({
         contractType,
         observations,
       });
-      toast.success("Cliente guardado com sucesso!");
+
+      /* log --------------------------------------------------------- */
+      await logEvent({
+        type: creating ? "customer_created" : "customer_updated",
+        summary: `${
+          creating ? "Criado" : "Atualizado"
+        } cliente “${companyName}”`,
+        details: {
+          companyName,
+          companyVat,
+          contactName,
+          contactEmail,
+          contractType,
+          contractStartDate,
+          contractEndDate,
+          contractValue,
+        },
+        context: { customer_id: customerId },
+      });
+
+      toast.success(
+        creating
+          ? "Cliente criado com sucesso!"
+          : "Cliente actualizado com sucesso!"
+      );
       navigate(cancelPath);
     } catch (err) {
-      toast.error(`Erro: ${err.message}`);
+      // 23505 = unique_violation (PostgreSQL)
+      const duplicate =
+        (err?.code === "23505" || err?.code === "23514") && // unique_violation
+        /email/i.test(err?.constraint ?? err?.message ?? "");
+
+      toast.error(
+        duplicate
+          ? "Já existe um cliente com esse e-mail."
+          : `Erro: ${err.message}`
+      );
     } finally {
       setLoading(false);
     }
@@ -98,24 +139,24 @@ export default function CustomerForm({
 
   if (loading) return <Loading message="A guardar cliente…" full />;
 
-  /* ---------- UI ---------- */
+  /* --------------- UI ------------------------------ */
   return (
     <form onSubmit={handleSubmit} className="mt-5 flex w-full flex-col gap-5">
-      {/* --- Empresa --- */}
+      {/* ——— Empresa ——— */}
       <FormSection icon={Building2} title="Dados da Empresa">
         <div className="mt-3 flex gap-3">
           <FormInputCol
             value={companyName}
             onChange={setCompanyName}
             label="Nome da Empresa *"
-            placeholder={"Umbrella Corporation"}
+            placeholder="Umbrella Corporation"
             required
           />
           <FormInputCol
             value={companyVat}
             onChange={setCompanyVat}
             label="NIF da Empresa *"
-            placeholder={"999999990"}
+            placeholder="999999990"
             required
           />
         </div>
@@ -125,9 +166,7 @@ export default function CustomerForm({
           value={companyAddress}
           onChange={setCompanyAddress}
           label="Morada da Empresa"
-          placeholder={
-            "Raccoon City Industrial Park, Bloco 3, Avenida Central, nº 217"
-          }
+          placeholder="Raccoon City Industrial Park, Bloco 3-217"
         />
 
         <div className="mt-3 flex gap-3">
@@ -135,25 +174,25 @@ export default function CustomerForm({
             value={companyActivity}
             onChange={setCompanyActivity}
             label="Atividade da Empresa"
-            placeholder={"Investigação Biomédica e Farmacêutica"}
+            placeholder="Investigação Biomédica"
           />
           <FormInputCol
             value={companyWebsite}
             onChange={setCompanyWebsite}
             label="Website da Empresa"
-            placeholder={"https://www.umbrella-corp.pt"}
+            placeholder="https://umbrella.pt"
           />
         </div>
       </FormSection>
 
-      {/* --- Contacto --- */}
+      {/* ——— Contacto ——— */}
       <FormSection icon={UserPlus} title="Informação de Cliente">
         <div className="mt-3 flex gap-3">
           <FormInputCol
             value={contactName}
             onChange={setContactName}
             label="Nome do Cliente *"
-            placeholder={"Dr. Albert Wesker"}
+            placeholder="Dr. Albert Wesker"
             required
           />
           <FormInputCol
@@ -170,13 +209,13 @@ export default function CustomerForm({
           value={contactEmail}
           onChange={setContactEmail}
           label="Email do Cliente"
-          placeholder="awesker@umbrella-corp.pt"
+          placeholder="awesker@umbrella.pt"
           type="email"
         />
       </FormSection>
 
-      {/* --- Contracto --- */}
-      <FormSection icon={ReceiptEuro} title="Informação de Contracto">
+      {/* ——— Contrato ——— */}
+      <FormSection icon={ReceiptEuro} title="Informação de Contrato">
         <div className="mt-3 flex gap-3">
           <FormInputCol
             value={contractStartDate}
@@ -199,16 +238,16 @@ export default function CustomerForm({
           <FormInputCol
             value={contractValue}
             onChange={setContractValue}
-            label="Valor do Mensal *"
-            placeholder={"500€ ou 20% vendas"}
+            label="Valor Mensal *"
+            placeholder="500 € ou 20 % vendas"
             required
           />
           <FormInputCol
             value={contractPoints}
             onChange={setContractPoints}
-            label="Quantidade de Pontos"
+            label="Qtd. de Pontos"
             type="number"
-            placeholder={"500"}
+            placeholder="500"
           />
         </div>
 
@@ -216,14 +255,12 @@ export default function CustomerForm({
           className="mt-3"
           value={observations}
           onChange={setObservations}
-          label="Observações Adicionais"
-          placeholder={
-            "Cliente com acesso prioritário ao laboratório nível 4. Requer validação biométrica para alterações de dados. Classificação interna: Confidencial."
-          }
+          label="Observações"
+          placeholder="Acesso prioritário ao laboratório nível 4…"
         />
       </FormSection>
 
-      {/* Botões */}
+      {/* ——— Botões ——— */}
       <FormActions cancelPath={cancelPath} submitLabel={submitLabel} />
     </form>
   );
