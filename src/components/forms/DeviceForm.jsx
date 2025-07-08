@@ -1,7 +1,7 @@
 // src/components/forms/DeviceForm.jsx
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Lock, Tv2, Clock, Save } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Lock, Tv2, Clock } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 import { FormInputCol, FormInputRow } from "./ui/Input";
@@ -9,14 +9,15 @@ import FormSection from "./ui/FormSection";
 import FormActions from "./ui/FormActions";
 import SchedulePicker from "./ui/SchedulePicker";
 import Loading from "../ui/Loading";
+import { logEvent } from "../../services/logEvent"; // ★ NEW
 
-const DeviceForm = ({
-  initialValues = {},
-  onSubmit,
+export default function DeviceForm({
+  initialValues = {}, // {} → criar · {…} → editar
+  onSubmit, // (payload) => Promise<deviceId>
   cancelPath = "#",
   submitLabel = "Guardar",
-}) => {
-  /* ─────────── state controlado ─────────── */
+}) {
+  /* ────────── estado ────────── */
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -27,7 +28,7 @@ const DeviceForm = ({
 
   const navigate = useNavigate();
 
-  /* preencher quando mudam os initialValues (ex.: edição) */
+  /* preencher ao entrar em edição */
   useEffect(() => {
     setLogin(initialValues.login ?? "");
     setName(initialValues.name ?? "");
@@ -40,10 +41,10 @@ const DeviceForm = ({
           : initialValues.schedule
         : {}
     );
-    setPassword("");
+    setPassword(""); // nunca preenchemos hashes
   }, [initialValues?.id]);
 
-  /* ─────────── submit ─────────── */
+  /* ────────── SUBMIT ────────── */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -52,17 +53,34 @@ const DeviceForm = ({
       return;
     }
 
+    const creating = !initialValues.id;
+
     try {
       setLoading(true);
-      await onSubmit({
+
+      /* envia dados → espera o id (novo ou o mesmo) */
+      const deviceId = await onSubmit({
         login,
-        password: password || undefined, // só envia se mudou / criou
+        password: password || undefined, // só envia se mudou
         name,
         resolution,
         location,
         schedule: JSON.stringify(schedule),
       });
-      toast.success("Device atualizado com sucesso");
+
+      /* -------------- LOG -------------- */
+      await logEvent({
+        type: creating ? "device_created" : "device_updated",
+        summary: `${creating ? "Criado" : "Actualizado"} dispositivo “${name}”`,
+        details: { login, name, resolution, location, schedule },
+        context: { device_id: deviceId },
+      });
+
+      toast.success(
+        creating
+          ? "Dispositivo criado com sucesso"
+          : "Dispositivo actualizado com sucesso"
+      );
       navigate(cancelPath);
     } catch (err) {
       toast.error(`Erro: ${err.message}`);
@@ -73,11 +91,11 @@ const DeviceForm = ({
 
   if (loading) return <Loading message="A guardar dispositivo…" full />;
 
-  /* ─────────── UI ─────────── */
+  /* ────────── UI ────────── */
   return (
     <form onSubmit={handleSubmit} className="mt-5 flex w-full flex-col gap-5">
       {/* Dados de acesso */}
-      <FormSection icon={Lock} title={"Dados de Acesso"}>
+      <FormSection icon={Lock} title="Dados de Acesso">
         <div className="mt-2 flex gap-3">
           <FormInputCol
             value={login}
@@ -95,53 +113,50 @@ const DeviceForm = ({
             }
             placeholder="T-Virus@2025!"
             type="password"
-            required={!initialValues.id} /* obrigatória só em criação */
+            required={!initialValues.id}
           />
         </div>
       </FormSection>
 
-      {/* Dados dispositivo */}
-      <FormSection
-        icon={Tv2}
-        title={"Dados do Dispositivo"}
-        className="flex flex-col gap-3"
-      >
+      {/* Dados do dispositivo */}
+      <FormSection icon={Tv2} title="Dados do Dispositivo">
         <FormInputRow
           value={name}
           onChange={setName}
           label="Nome do Dispositivo *"
-          placeholder="Painel de Controlo - Câmara Subterrânea 3"
+          placeholder="Painel Hall Entrada"
+          className={"mt-3"}
           required
         />
 
         <FormInputRow
           value={location}
           onChange={setLocation}
-          label="Localização do Artigo *"
-          placeholder="Instalação Umbrella – Complexo Subterrâneo, Zona Oeste"
+          label="Localização *"
+          placeholder="Entrada principal"
+          className={"mt-3"}
           required
         />
 
         <FormInputRow
           value={resolution}
           onChange={setResolution}
-          label="Resolução de TV"
+          label="Resolução"
           placeholder="3840x2160 (4K UHD)"
+          className={"mt-3"}
         />
       </FormSection>
 
       {/* Horário */}
-      <FormSection icon={Clock} title={"Horário de Reprodução"}>
+      <FormSection icon={Clock} title="Horário de Reprodução">
         <SchedulePicker value={schedule} onChange={setSchedule} />
       </FormSection>
 
       <FormActions
         cancelPath={cancelPath}
         submitLabel={submitLabel}
-        cancelLabel={"Cancelar"}
+        cancelLabel="Cancelar"
       />
     </form>
   );
-};
-
-export default DeviceForm;
+}
