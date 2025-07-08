@@ -36,6 +36,5 @@ export async function logEvent({ type, summary, details = {}, context = {} }) {
         if (error) throw error;
     } catch (err) {
         console.error("Falhou gravação de log:", err);
-        /* não propagamos para não bloquear o fluxo da app */
     }
 }

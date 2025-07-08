@@ -1,3 +1,4 @@
+// src/components/forms/VideoForm.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Video, Tv2 } from "lucide-react";
@@ -7,32 +8,34 @@ import Loading from "../ui/Loading";
 import { FormInputCol, FormInputRow } from "./ui/Input";
 import FormSection from "./ui/FormSection";
 import FormActions from "./ui/FormActions";
+import { logEvent } from "../../services/logEvent"; // ★ NEW
 
 export default function VideoForm({
-  initialValues = {},
-  onSubmit,
+  initialValues = {}, // {} = criar  ·  { … } = editar
+  onSubmit, // (payload) => Promise<videoId>
   cancelPath = "#",
   submitLabel = "Guardar",
   customerId,
   devices = [],
 }) {
-  /* ---------- vídeo ---------- */
+  /* ---------- estado do vídeo ---------- */
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoDuration, setVideoDuration] = useState("");
   const [videoStatus, setVideoStatus] = useState("active");
 
-  /* ---------- TVs ------------ */
+  /* ---------- TVs ---------- */
   const [deviceSearch, setDeviceSearch] = useState("");
-  const [deviceIds, setDeviceIds] = useState([]); // vários IDs
+  const [deviceIds, setDeviceIds] = useState([]);
 
-  /* ---------- meta ----------- */
+  /* ---------- meta ---------- */
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  /* preencher se for edição */
+  /* ------------ preencher em edição ------------ */
   useEffect(() => {
+    if (!initialValues.id) return; // criação
     setVideoUrl(initialValues.videoUrl ?? "");
     setVideoTitle(initialValues.videoTitle ?? "");
     setVideoDescription(initialValues.videoDescription ?? "");
@@ -45,9 +48,9 @@ export default function VideoForm({
         ? [String(initialValues.deviceIds)]
         : []
     );
-  }, [initialValues]);
+  }, [initialValues?.id]);
 
-  /* filtra TVs */
+  /* ------------ TVs filtradas ------------ */
   const filteredDevices = useMemo(() => {
     const t = deviceSearch.trim().toLowerCase();
     return t
@@ -57,13 +60,12 @@ export default function VideoForm({
       : devices;
   }, [devices, deviceSearch]);
 
-  /* select → estado */
+  /* ------------ select → estado ------------ */
   const handleSelect = (e) => {
-    const opts = Array.from(e.target.selectedOptions).map((o) => o.value);
-    setDeviceIds(opts);
+    setDeviceIds(Array.from(e.target.selectedOptions, (o) => o.value));
   };
 
-  /* submit */
+  /* ------------ submit ------------ */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -77,9 +79,13 @@ export default function VideoForm({
       return;
     }
 
+    const creating = !initialValues.id;
+
     try {
       setLoading(true);
-      await onSubmit({
+
+      /* 1) grava vídeo (espera id devolvido) */
+      const videoId = await onSubmit({
         videoUrl,
         videoTitle,
         videoDescription,
@@ -87,6 +93,23 @@ export default function VideoForm({
         videoStatus,
         deviceIds,
       });
+
+      /* 2) regista log */
+      await logEvent({
+        type: creating ? "video_created" : "video_updated",
+        summary: `${creating ? "Criado" : "Atualizado"} vídeo “${videoTitle}”`,
+        details: {
+          videoUrl,
+          videoDuration,
+          videoStatus,
+          devices: deviceIds.length,
+        },
+        context: { customer_id: customerId, video_id: videoId },
+      });
+
+      toast.success(
+        creating ? "Vídeo criado com sucesso!" : "Vídeo atualizado com sucesso!"
+      );
       navigate(cancelPath);
     } catch (err) {
       toast.error(`Erro ao guardar: ${err.message}`);
@@ -97,10 +120,10 @@ export default function VideoForm({
 
   if (loading) return <Loading message="A guardar vídeo…" full />;
 
-  /* ------------- UI ------------- */
+  /* ------------ UI ------------ */
   return (
     <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-5">
-      {/* ------ dados do vídeo ------ */}
+      {/* --- Dados do vídeo --- */}
       <FormSection icon={Video} title="Dados do Vídeo">
         <div className="mt-3 flex gap-3">
           <FormInputCol
@@ -145,9 +168,6 @@ export default function VideoForm({
             className="rounded-md border border-gray-200 px-2 py-2 text-sm"
             required
           >
-            <option value="" disabled hidden>
-              -- selecione --
-            </option>
             <option value="active">Ativo</option>
             <option value="paused">Pausado</option>
             <option value="deactive">Desativo</option>
@@ -155,7 +175,7 @@ export default function VideoForm({
         </div>
       </FormSection>
 
-      {/* ------ TVs ------ */}
+      {/* --- TVs --- */}
       <FormSection icon={Tv2} title="Escolher Televisões">
         <FormInputRow
           className="mt-3"

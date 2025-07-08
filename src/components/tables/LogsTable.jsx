@@ -23,8 +23,8 @@ const eventColor = {
   customer_updated: "#3b82f6", // blue-500
   customer_created: "#10b981", // emerald-500
 
-  video_add: "#f59e0b", // amber-500
-  video_update: "#fbbf24",
+  video_update: "#3b82f6",
+  video_created: "#10b981", // amber-500
 
   device_offline: "#ef4444", // red-500
   default: "#64748b", // slate-500
@@ -42,7 +42,7 @@ const eventLabel = {
   device_created: "Dispositivo criado",
   device_updated: "Dispositivo atualizado",
 
-  video_add: "Vídeo adicionado",
+  video_created: "Vídeo adicionado",
   video_update: "Vídeo atualizado",
 
   customer_created: "Cliente criado",
