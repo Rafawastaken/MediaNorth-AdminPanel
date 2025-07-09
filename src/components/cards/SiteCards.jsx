@@ -146,7 +146,7 @@ export default function SiteCard({ site, onRemove }) {
       {/* --- Ações --- */}
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <Link
-          to={`/sites/${site.id}`}
+          to={`/sites/${site.id}/devices`}
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-gray-200 px-4 py-2 text-sm hover:bg-slate-50"
         >
           <Eye size={16} /> Ver

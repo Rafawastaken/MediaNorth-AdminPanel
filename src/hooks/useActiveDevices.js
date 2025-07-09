@@ -10,18 +10,34 @@ export function useActiveDevices() {
     useEffect(() => {
         (async () => {
             setLoading(true);
+            setError(null);
 
+            // Seleciona todos os dispositivos com active = true
+            // e faz join na tabela `site` para buscar o nome do site
             const { data, error } = await supabase
                 .from("device")
-                .select("*")            // ou "id, name, last_seen" se quiseres só algumas
-                .eq("active", true);    // ← se for VARCHAR usa "true"
+                .select(`
+          *,
+          site:site_id (
+            id,
+            name
+          )
+        `)
+                .eq("active", true);
 
             if (error) {
                 setError(error);
                 setDevices([]);
             } else {
-                setDevices(data);
+                // Normaliza para um array onde cada device.site contém { id, name }
+                setDevices(
+                    data.map((d) => ({
+                        ...d,
+                        siteName: d.site?.name ?? "—",
+                    }))
+                );
             }
+
             setLoading(false);
         })();
     }, []);

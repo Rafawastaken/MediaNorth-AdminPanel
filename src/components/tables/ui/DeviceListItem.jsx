@@ -47,7 +47,6 @@ export default function DeviceListItem({ device, onDelete }) {
         summary: `Apagado dispositivo “${name}”`,
         details: {
           deviceId: idDevice,
-          siteId: idSite,
           name,
           location,
         },

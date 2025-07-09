@@ -2,12 +2,10 @@
 // -------------------------------------------------------------------
 // “Atividade Recente” – mostra os 6 eventos mais recentes de log_event
 // -------------------------------------------------------------------
-import { useEffect, useState, useCallback } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Link } from "react-router-dom";
-import { supabase } from "../../libs/supabase";
-
+import { useLogs } from "../../hooks/useLogs";
 /* ───────── cor por tipo ─────────── */
 const eventColor = {
   login: "#0ea5e9",
@@ -63,29 +61,7 @@ const eventLabel = {
 const labelFor = (t) => eventLabel[t] ?? t.replaceAll("_", " ");
 
 export default function LogsTableBlock() {
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoad] = useState(true);
-  const [error, setError] = useState(null);
-
-  /* ---------- fetch ---------- */
-  const fetchLogs = useCallback(async () => {
-    setLoad(true);
-    setError(null);
-
-    const { data, error } = await supabase
-      .from("log_event")
-      .select("id, event_type, summary, created_at")
-      .order("created_at", { ascending: false })
-      .limit(6);
-
-    if (error) setError(error);
-    else setLogs(data);
-    setLoad(false);
-  }, []);
-
-  useEffect(() => {
-    fetchLogs();
-  }, [fetchLogs]);
+  const { logs, loading, error, refetch } = useLogs(6);
 
   /* ---------- UI ---------- */
   return (

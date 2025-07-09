@@ -122,10 +122,14 @@ const Sidebar = ({ collapsed = false }) => {
           <Item icon={MonitorOff} to="/inactive-devices" collapsed={collapsed}>
             Dispositivos Inativas
           </Item>
-          <Item icon={CalendarClock} to="/anuncios-fim" collapsed={collapsed}>
+          <Item
+            icon={CalendarClock}
+            to="/terminating-contracts"
+            collapsed={collapsed}
+          >
             Anúncios a Terminar
           </Item>
-          <Item icon={BarChart2} to="/avisos" collapsed={collapsed}>
+          <Item icon={BarChart2} to="/logs" collapsed={collapsed}>
             Estatísticas & Avisos
           </Item>
         </Section>

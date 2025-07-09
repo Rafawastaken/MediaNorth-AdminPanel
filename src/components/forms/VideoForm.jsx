@@ -120,6 +120,8 @@ export default function VideoForm({
 
   if (loading) return <Loading message="A guardar vídeo…" full />;
 
+  console.log(filteredDevices);
+
   /* ------------ UI ------------ */
   return (
     <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-5">
@@ -199,7 +201,7 @@ export default function VideoForm({
           >
             {filteredDevices.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.name} — {d.location}
+                {d.site.name} - {d.name} — {d.location}
               </option>
             ))}
             {!filteredDevices.length && (

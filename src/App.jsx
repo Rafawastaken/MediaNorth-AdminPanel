@@ -5,6 +5,8 @@ import { AuthProvider, ProtectedRoute } from "./contexts/AuthContext.jsx";
 import Layout from "./layouts/Layout.jsx";
 // Pages
 import HomePage from "./pages/HomePage.jsx";
+import InactiveDevicesPage from "./pages/stats/InactiveDevicesPage.jsx";
+// Auth
 import LoginPage from "./pages/auth/LoginPage.jsx";
 // Sites
 import AddSitePage from "./pages/sites/AddSitePage.jsx";
@@ -25,6 +27,8 @@ import AddVideoPage from "./pages/videos/AddVideoPage.jsx";
 import { Toaster } from "react-hot-toast";
 import EditCustomerPage from "./pages/customers/EditCustomerPage.jsx";
 import EditVideoPage from "./pages/videos/EditVideoPage.jsx";
+import TerminatingContractsPage from "./pages/stats/TerminatingContractsPage.jsx";
+import LogsPage from "./pages/stats/LogsPage.jsx";
 
 const App = () => (
   <BrowserRouter>
@@ -40,11 +44,17 @@ const App = () => (
         >
           {/* ---General----------------------- */}
           <Route path="/" element={<HomePage />} />
+          <Route path="/inactive-devices" element={<InactiveDevicesPage />} />
+          <Route
+            path="/terminating-contracts"
+            element={<TerminatingContractsPage />}
+          />
+          <Route path="/logs" element={<LogsPage />} />
 
           {/* ---Sites----------------------- */}
           <Route path="/sites" element={<SitePage />} />
           <Route path="/sites/add" element={<AddSitePage />} />
-          <Route path="/site/:idSite/edit" element={<EditSitePage />} />
+          <Route path="/sites/:idSite/edit" element={<EditSitePage />} />
           {/* ---Devices----------------------- */}
           <Route path="/sites/:idSite/devices" element={<DevicePage />} />
           <Route
