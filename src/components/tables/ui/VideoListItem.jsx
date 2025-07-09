@@ -1,8 +1,16 @@
+// src/components/tables/ui/VideoListItem.jsx
 import { Video, Edit2, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+import { supabase } from "../../../libs/supabase";
+import { logEvent } from "../../../services/logEvent";
+import { toast } from "react-hot-toast";
 
-export default function VideoListItem({ video, idCustomer }) {
+export default function VideoListItem({
+  video,
+  idCustomer,
+  onRemove, // callback para refetch
+}) {
   const {
     id,
     video_title,
@@ -10,49 +18,74 @@ export default function VideoListItem({ video, idCustomer }) {
     video_status,
     video_description,
     created_at,
-    device_video = [], // [{ device_id, device:{ id, site_id,… } }]
+    device_video = [],
   } = video;
 
-  /* -------- badge -------- */
+  // badge de status
   const statusCfg = {
     active: { txt: "ativo", cls: "bg-emerald-100 text-emerald-700" },
     paused: { txt: "pausado", cls: "bg-yellow-100 text-yellow-700" },
     deactive: { txt: "desativo", cls: "bg-red-100 text-red-700" },
-  }[video_status] ?? { txt: video_status, cls: "bg-slate-200 text-slate-600" };
+  }[video_status] || { txt: video_status, cls: "bg-slate-200 text-slate-600" };
 
-  /* -------- nº TVs / sites -------- */
+  // contagens
   const tvCount = new Set(device_video.map((l) => l.device_id)).size;
   const siteCount = new Set(
     device_video.map((l) => l.device?.site_id).filter(Boolean)
   ).size;
 
-  /* -------- duração mm:ss -------- */
+  // formata duração mm:ss
   const d = Number(video_duration) || 0;
   const durationStr = `${String(Math.floor(d / 60)).padStart(2, "0")}:${String(
     d % 60
   ).padStart(2, "0")}`;
 
+  // handler de delete
+  const handleDelete = async () => {
+    if (
+      !window.confirm(
+        `Apagar vídeo "${video_title}"? Esta ação não pode ser revertida.`
+      )
+    )
+      return;
+
+    try {
+      // 1) apaga o registro
+      const { error } = await supabase
+        .from("customer_video")
+        .delete()
+        .eq("id", id);
+      if (error) throw error;
+
+      // 2) log
+      await logEvent({
+        type: "video_deleted",
+        summary: `Apagado vídeo "${video_title}"`,
+        details: { title: video_title, url: video.video_url },
+        context: { customer_id: idCustomer, customer_video_id: id },
+      });
+
+      toast.success("Vídeo removido com sucesso.");
+      onRemove?.(); // dispara o refetch na página pai
+    } catch (err) {
+      toast.error(`Erro ao apagar: ${err.message}`);
+    }
+  };
+
   return (
     <div className="flex items-center gap-4 rounded-md border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:shadow-md">
-      {/* ícone */}
       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-slate-100">
         <Video size={22} className="text-slate-600" />
       </span>
-
-      {/* conteúdo principal */}
       <div className="flex flex-1 flex-col">
-        {/* título + badge */}
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="font-semibold">
-            {video_title} {idCustomer}
-          </h3>
+          <h3 className="font-semibold">{video_title}</h3>
           <span
             className={clsx("rounded-full px-2 py-0.5 text-xs", statusCfg.cls)}
           >
             {statusCfg.txt}
           </span>
         </div>
-        {/* linha info 1 */}
         <div className="mt-1 flex flex-wrap gap-6 text-sm text-slate-600">
           <span>
             <span className="font-medium">Duração:</span> {durationStr}
@@ -64,8 +97,6 @@ export default function VideoListItem({ video, idCustomer }) {
             <span className="font-medium">Locais:</span> {siteCount}
           </span>
         </div>
-
-        {/* linha info 2 (descrição e data) */}
         <div className="mt-1 flex flex-wrap gap-6 text-sm text-slate-600">
           {video_description && (
             <span className="max-w-[24ch] truncate">
@@ -81,21 +112,21 @@ export default function VideoListItem({ video, idCustomer }) {
           )}
         </div>
       </div>
-
-      {/* ações */}
       <div className="ml-auto flex shrink-0 gap-2">
         <Link
-          className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
           to={`/customers/${idCustomer}/videos/${id}/edit`}
+          className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
+          title="Editar"
         >
           <Edit2 size={16} />
         </Link>
-        <Link
+        <button
+          onClick={handleDelete}
           className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
-          to={location ? location : "#"}
+          title="Apagar"
         >
           <Trash2 size={16} />
-        </Link>
+        </button>
       </div>
     </div>
   );

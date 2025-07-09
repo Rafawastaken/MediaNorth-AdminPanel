@@ -2,8 +2,11 @@
 import { Tv2, Power, Cog, Trash2 } from "lucide-react";
 import { useParams, Link } from "react-router-dom";
 import { getDeviceMeta } from "../../../helpers/deviceMeta";
+import { supabase } from "../../../libs/supabase";
+import { logEvent } from "../../../services/logEvent";
+import { toast } from "react-hot-toast";
 
-export default function DeviceListItem({ device }) {
+export default function DeviceListItem({ device, onDelete }) {
   /* meta derivada */
   const { online, tempLabel, tempColor, sched, lastSeenStr } =
     getDeviceMeta(device);
@@ -21,6 +24,43 @@ export default function DeviceListItem({ device }) {
   /* id do site vindo da URL para compor a rota */
   const { idSite } = useParams();
 
+  /* handler de delete */
+  const handleDelete = async () => {
+    if (
+      !window.confirm(
+        `Apagar dispositivo “${name}”? Esta ação não pode ser revertida.`
+      )
+    )
+      return;
+
+    try {
+      // 1) delete na base
+      const { error } = await supabase
+        .from("device")
+        .delete()
+        .eq("id", idDevice);
+      if (error) throw error;
+
+      // 2) log
+      await logEvent({
+        type: "device_deleted",
+        summary: `Apagado dispositivo “${name}”`,
+        details: {
+          deviceId: idDevice,
+          siteId: idSite,
+          name,
+          location,
+        },
+        context: { device_id: idDevice },
+      });
+
+      toast.success("Dispositivo removido com sucesso.");
+      onDelete?.(); // dispara refetch no componente pai
+    } catch (err) {
+      toast.error(`Erro ao apagar: ${err.message}`);
+    }
+  };
+
   return (
     <div className="flex items-center gap-4 rounded-md border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:shadow-md">
       <input type="checkbox" className="h-4 w-4 rounded border-slate-300" />
@@ -33,7 +73,6 @@ export default function DeviceListItem({ device }) {
         {/* linha 1 */}
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="font-semibold">{name}</h3>
-
           <span
             className={`rounded-full px-2 py-0.5 text-xs font-medium ${
               active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
@@ -41,14 +80,12 @@ export default function DeviceListItem({ device }) {
           >
             {active ? "Ativa" : "Desativa"}
           </span>
-
           <span
-            className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium
-              ${
-                online
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border border-slate-200 bg-slate-100 text-slate-500"
-              }`}
+            className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
+              online
+                ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
+                : "border border-slate-200 bg-slate-100 text-slate-500"
+            }`}
           >
             <Power size={10} className="shrink-0" />
             {online ? "Online" : "Offline"}
@@ -60,19 +97,16 @@ export default function DeviceListItem({ device }) {
           <span>
             <span className="font-medium">Local:</span> {location}
           </span>
-
           {resolution && (
             <span>
               <span className="font-medium">Resolução:</span> {resolution}
             </span>
           )}
-
           {playlist_name && (
             <span>
               <span className="font-medium">Playlist:</span> {playlist_name}
             </span>
           )}
-
           {tempLabel && (
             <span className={tempColor}>
               <span className="font-medium text-slate-600">Temperatura:</span>{" "}
@@ -96,8 +130,8 @@ export default function DeviceListItem({ device }) {
       >
         <Cog size={16} />
       </Link>
-
       <button
+        onClick={handleDelete}
         className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
         title="Apagar"
       >

@@ -25,6 +25,7 @@ export default function DeviceForm({
   const [location, setLocation] = useState("");
   const [schedule, setSchedule] = useState({});
   const [loading, setLoading] = useState(false);
+  const [deviceActive, setDeviceActive] = useState("active"); // estado do dispositivo
 
   const navigate = useNavigate();
 
@@ -34,6 +35,13 @@ export default function DeviceForm({
     setName(initialValues.name ?? "");
     setResolution(initialValues.resolution ?? "");
     setLocation(initialValues.location ?? "");
+    setDeviceActive(
+      initialValues.hasOwnProperty("active")
+        ? initialValues.active
+          ? "active"
+          : "deactive"
+        : "active"
+    );
     setSchedule(
       initialValues.schedule
         ? typeof initialValues.schedule === "string"
@@ -65,6 +73,7 @@ export default function DeviceForm({
         name,
         resolution,
         location,
+        deviceActive: deviceActive == "active", // converte de string para boolean
         schedule: JSON.stringify(schedule),
       });
 
@@ -79,7 +88,7 @@ export default function DeviceForm({
       toast.success(
         creating
           ? "Dispositivo criado com sucesso"
-          : "Dispositivo actualizado com sucesso"
+          : "Dispositivo atualizado com sucesso"
       );
       navigate(cancelPath);
     } catch (err) {
@@ -145,6 +154,21 @@ export default function DeviceForm({
           placeholder="3840x2160 (4K UHD)"
           className={"mt-3"}
         />
+
+        <div className="mt-3 flex flex-col gap-1">
+          <label className="text-sm font-medium">Dispositivo Ativo *</label>
+          <select
+            value={deviceActive}
+            onChange={(e) => setDeviceActive(e.target.value)}
+            className="rounded-md border border-gray-200 px-2 py-2 text-sm"
+            required
+          >
+            <option value="active" selected>
+              Ativo
+            </option>
+            <option value="deactive">Desativo</option>
+          </select>
+        </div>
       </FormSection>
 
       {/* Horário */}

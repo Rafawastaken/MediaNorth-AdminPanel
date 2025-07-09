@@ -39,7 +39,7 @@ export default function EditVideoPage() {
     try {
       await updateVideo(fields);
       toast.success("Vídeo actualizado com sucesso");
-      navigate(`/customers/${idCustomer}/videos`);
+      navigate(`/customers/${idCustomer}`);
     } catch (err) {
       toast.error(`Erro ao actualizar: ${err.message}`);
       throw err; // permite feedback no VideoForm
@@ -52,7 +52,7 @@ export default function EditVideoPage() {
       <HeadingStandardBack
         title="Editar Vídeo"
         subtitle="Actualizar informações do vídeo"
-        path={`/customers/${idCustomer}/videos`}
+        cancelPath={`/customers/${idCustomer}`}
       />
 
       <VideoForm

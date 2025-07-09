@@ -5,10 +5,10 @@ import Loading from "../../components/ui/Loading";
 import SearchResults from "../../components/forms/ui/SearchResults";
 import SiteListBlock from "../../components/blocks/SiteListBlock";
 import NoResults from "../../components/ui/NoResults";
-import { useSitesSummary } from "../../hooks/useSiteSummary";
+import { useSitesSummary } from "../../hooks/useSitesSummary";
 
 const SitePage = () => {
-  const { sites, loading, error } = useSitesSummary();
+  const { sites, loading, error, refetch } = useSitesSummary();
 
   const [term, setTerm] = useState("");
   const [status, setStatus] = useState("all");
@@ -51,7 +51,7 @@ const SitePage = () => {
       />
 
       {filteredSites.length ? (
-        <SiteListBlock sites={filteredSites} />
+        <SiteListBlock sites={filteredSites} onRemoved={refetch} />
       ) : (
         <NoResults
           title="Sem locais a mostrar"

@@ -20,6 +20,7 @@ export default function CustomersPage() {
     stats,
     loading: videoStatsLoading,
     error: videoStatsError,
+    refetch: refetchVideos,
   } = useCustomerVideos(idCustomer, "all");
 
   if (customerLoading || videoStatsLoading) {
@@ -48,7 +49,11 @@ export default function CustomersPage() {
       />
       <CustomerDetailsCard customer={customer} />
       <CustomerVideoStatsBlock videos={videos} stats={stats} />
-      <VideosTable videos={videos} idCustomer={idCustomer} />
+      <VideosTable
+        videos={videos}
+        idCustomer={idCustomer}
+        onRemove={refetchVideos}
+      />
     </div>
   );
 }

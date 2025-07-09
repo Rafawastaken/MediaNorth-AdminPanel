@@ -8,7 +8,8 @@ import DevicesTable from "../../components/tables/DevicesTable";
 
 export default function DevicePage() {
   const { idSite } = useParams();
-  const { site, devices, loading, error } = useSiteDetailsWithId(idSite);
+  const { site, devices, loading, error, refetch } =
+    useSiteDetailsWithId(idSite);
 
   if (loading) {
     return <Loading message="Carregar TVs..." />;
@@ -29,7 +30,7 @@ export default function DevicePage() {
         buttonBackPath="/sites"
       />
       <DeviceStatisticBlock devices={devices} />
-      <DevicesTable devices={devices} />
+      <DevicesTable devices={devices} onDelete={refetch} />
     </div>
   );
 }

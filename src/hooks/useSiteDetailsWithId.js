@@ -62,7 +62,8 @@ export function useSiteDetailsWithId(idSite) {
       name,
       resolution,
       location,
-      scheduleObj,      // já em objecto JS
+      deviceActive,
+      scheduleObj,
     }) => {
       // hash da password no client
       const password_hash = await bcrypt.hash(password, 10);
@@ -74,6 +75,7 @@ export function useSiteDetailsWithId(idSite) {
         resolution: resolution || null,
         location,
         site_id: idSite,
+        active: deviceActive || true,
         schedule: JSON.stringify(scheduleObj),
       };
 

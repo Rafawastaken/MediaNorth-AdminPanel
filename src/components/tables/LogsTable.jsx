@@ -10,27 +10,31 @@ import { supabase } from "../../libs/supabase";
 
 /* ───────── cor por tipo ─────────── */
 const eventColor = {
-  login: "#0ea5e9", // sky-500
-  login_success: "#0ea5e9", // sky-500
+  login: "#0ea5e9",
+  login_success: "#0ea5e9",
   logout: "#0ea5e9",
 
-  site_created: "#10b981", // emerald-500
-  site_updated: "#3b82f6", // blue-500
+  site_created: "#10b981",
+  site_updated: "#3b82f6",
+  site_deleted: "#ef4444",
 
-  device_updated: "#3b82f6", // blue-500
-  device_created: "#10b981", // emerald-500
+  device_updated: "#3b82f6",
+  device_created: "#10b981",
+  device_deleted: "d78f72",
+  device_delete: "#ef4444",
 
-  customer_updated: "#3b82f6", // blue-500
-  customer_created: "#10b981", // emerald-500
+  customer_updated: "#3b82f6",
+  customer_created: "#10b981",
+  customer_deleted: "#ef4444",
 
   video_update: "#3b82f6",
-  video_created: "#10b981", // amber-500
+  video_created: "#10b981",
+  video_deleted: "#ef4444",
 
-  device_offline: "#ef4444", // red-500
-  default: "#64748b", // slate-500
+  device_offline: "#ef4444",
+  default: "#64748b",
 };
 
-/* ───────── label PT por tipo ─────── */
 const eventLabel = {
   login: "Sessão iniciada",
   login_success: "Sessão iniciada",
@@ -38,15 +42,19 @@ const eventLabel = {
 
   site_created: "Local criado",
   site_updated: "Local atualizado",
+  site_deleted: "Local removido",
 
   device_created: "Dispositivo criado",
   device_updated: "Dispositivo atualizado",
 
   video_created: "Vídeo adicionado",
   video_update: "Vídeo atualizado",
+  video_deleted: "Vídeo removido",
 
   customer_created: "Cliente criado",
-  customer_edited: "Cliente atualizado",
+  customer_updated: "Cliente atualizado",
+  customer_update: "Cliente atualizado",
+  customer_deleted: "Cliente removido",
 
   device_offline: "TV offline",
 };

@@ -1,5 +1,5 @@
 // src/hooks/useCustomersList.js
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../libs/supabase";
 
 export function useCustomersList() {
@@ -7,33 +7,42 @@ export function useCustomersList() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        (async () => {
-            setLoading(true);
-            const { data, error } = await supabase
-                .from("customer")
-                // pede só as colunas que vais mostrar na tabela
-                .select(`
-          id,
-          company_name,
-          company_activity,
-          company_address,
-          company_vat,
-          contact_name,
-          contact_phone,
-          contact_email,
-          contract_type,
-          contract_value,
-          contract_end_date,
-          contract_start_date
-        `)
-                .order("created_at", { ascending: false });
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        setError(null);
 
-            if (error) setError(error);
-            else setCustomers(data);
-            setLoading(false);
-        })();
+        const { data, error } = await supabase
+            .from("customer")
+            .select(`
+        id,
+        company_name,
+        company_activity,
+        company_address,
+        company_vat,
+        contact_name,
+        contact_phone,
+        contact_email,
+        contract_type,
+        contract_value,
+        contract_end_date,
+        contract_start_date
+      `)
+            .order("created_at", { ascending: false });
+
+        if (error) setError(error);
+        else setCustomers(data);
+
+        setLoading(false);
     }, []);
 
-    return { customers, loading, error };
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    return {
+        customers,
+        loading,
+        error,
+        refetch: fetchData,   // expos o refetch
+    };
 }

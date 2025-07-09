@@ -1,4 +1,4 @@
-// src/pages/customers/CustomerPage.jsx
+// src/pages/customers/CustomersPage.jsx
 import { useState, useMemo } from "react";
 import { toast } from "react-hot-toast";
 import { HeadingButton } from "../../components/ui/Headings";
@@ -10,34 +10,28 @@ import CustomersListBlock from "../../components/blocks/CustomersListBlock";
 import SearchResults from "../../components/forms/ui/SearchResults";
 
 export default function CustomersPage() {
-  const { customers, loading, error } = useCustomersList();
+  const { customers, loading, error, refetch } = useCustomersList();
   const [term, setTerm] = useState("");
   const [status, setStatus] = useState("");
-  /* pesquisa simples */
+
   const filtered = useMemo(() => {
     const t = term.trim().toLowerCase();
-
-    return (
-      customers
-        /* estado activo/inactivo baseado na data */
-        .filter((c) => {
-          if (status === "active") return isContractActive(c.contract_end_date);
-          if (status === "inactive")
-            return !isContractActive(c.contract_end_date);
-          return true; // "all"
-        })
-        /* termo de pesquisa */
-        .filter((c) => {
-          if (!t) return true;
-          return [c.company_name, c.company_vat, c.contact_name].some((field) =>
-            field?.toLowerCase().includes(t)
-          );
-        })
-    );
+    return customers
+      .filter((c) => {
+        if (status === "active") return isContractActive(c.contract_end_date);
+        if (status === "inactive")
+          return !isContractActive(c.contract_end_date);
+        return true;
+      })
+      .filter((c) => {
+        if (!t) return true;
+        return [c.company_name, c.company_vat, c.contact_name].some((f) =>
+          f?.toLowerCase().includes(t)
+        );
+      });
   }, [customers, term, status]);
 
   if (loading) return <Loading message="A carregar clientes…" full />;
-
   if (error) {
     toast.error(`Erro ao carregar clientes: ${error.message}`);
     return null;
@@ -52,7 +46,6 @@ export default function CustomersPage() {
         buttonText="Adicionar"
       />
 
-      {/* barra de pesquisa mínima – opcional */}
       <SearchResults
         term={term}
         onTermChange={setTerm}
@@ -62,7 +55,10 @@ export default function CustomersPage() {
       />
 
       {filtered.length ? (
-        <CustomersListBlock customers={filtered} />
+        <CustomersListBlock
+          customers={filtered}
+          onRemove={refetch} // passa o refetch
+        />
       ) : (
         <NoResults
           title="Sem clientes a mostrar"
