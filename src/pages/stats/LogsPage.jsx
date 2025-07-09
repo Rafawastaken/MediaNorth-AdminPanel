@@ -7,49 +7,11 @@ import { useLogs } from "../../hooks/useLogs";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { useAuth } from "../../contexts/AuthContext";
+import { EVENT_LABELS, EVENT_COLORS } from "../../enums/logs";
 
 export default function LogsPage() {
   const { logs, loading, error, refetch } = useLogs();
   const { user } = useAuth();
-
-  const eventColor = {
-    login: "#0ea5e9",
-    login_success: "#0ea5e9",
-    logout: "#0ea5e9",
-    site_created: "#10b981",
-    site_updated: "#3b82f6",
-    site_deleted: "#ef4444",
-    device_updated: "#3b82f6",
-    device_created: "#10b981",
-    device_deleted: "#d78f72",
-    customer_updated: "#3b82f6",
-    customer_created: "#10b981",
-    customer_deleted: "#ef4444",
-    video_update: "#3b82f6",
-    video_created: "#10b981",
-    video_deleted: "#ef4444",
-    device_offline: "#ef4444",
-    default: "#64748b",
-  };
-
-  const EVENT_LABELS = {
-    login: "Sessão iniciada",
-    login_success: "Sessão iniciada",
-    logout: "Sessão terminada",
-    site_created: "Local criado",
-    site_updated: "Local atualizado",
-    site_deleted: "Local removido",
-    device_created: "Dispositivo criado",
-    device_updated: "Dispositivo atualizado",
-    video_created: "Vídeo adicionado",
-    video_update: "Vídeo atualizado",
-    video_deleted: "Vídeo removido",
-    customer_created: "Cliente criado",
-    customer_updated: "Cliente atualizado",
-    customer_deleted: "Cliente removido",
-    device_offline: "TV offline",
-    default: "Outro evento",
-  };
 
   useEffect(() => {
     if (error) toast.error(`Erro ao carregar logs: ${error.message}`);
@@ -90,7 +52,8 @@ export default function LogsPage() {
             {logs.map((log, idx) => {
               const label =
                 EVENT_LABELS[log.event_type] || EVENT_LABELS.default;
-              const color = eventColor[log.event_type] ?? eventColor.default;
+              const color =
+                EVENT_COLORS[log.event_type] ?? EVENT_COLORS.default;
               const actor = user?.fullName ?? "—";
 
               return (

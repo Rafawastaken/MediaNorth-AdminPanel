@@ -6,59 +6,10 @@ import { formatDistanceToNow } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Link } from "react-router-dom";
 import { useLogs } from "../../hooks/useLogs";
-/* ───────── cor por tipo ─────────── */
-const eventColor = {
-  login: "#0ea5e9",
-  login_success: "#0ea5e9",
-  logout: "#0ea5e9",
-
-  site_created: "#10b981",
-  site_updated: "#3b82f6",
-  site_deleted: "#ef4444",
-
-  device_updated: "#3b82f6",
-  device_created: "#10b981",
-  device_deleted: "d78f72",
-  device_delete: "#ef4444",
-
-  customer_updated: "#3b82f6",
-  customer_created: "#10b981",
-  customer_deleted: "#ef4444",
-
-  video_update: "#3b82f6",
-  video_created: "#10b981",
-  video_deleted: "#ef4444",
-
-  device_offline: "#ef4444",
-  default: "#64748b",
-};
-
-const eventLabel = {
-  login: "Sessão iniciada",
-  login_success: "Sessão iniciada",
-  logout: "Sessão terminada",
-
-  site_created: "Local criado",
-  site_updated: "Local atualizado",
-  site_deleted: "Local removido",
-
-  device_created: "Dispositivo criado",
-  device_updated: "Dispositivo atualizado",
-
-  video_created: "Vídeo adicionado",
-  video_update: "Vídeo atualizado",
-  video_deleted: "Vídeo removido",
-
-  customer_created: "Cliente criado",
-  customer_updated: "Cliente atualizado",
-  customer_update: "Cliente atualizado",
-  customer_deleted: "Cliente removido",
-
-  device_offline: "TV offline",
-};
+import { EVENT_LABELS, EVENT_COLORS } from "../../enums/logs";
 
 /* helper */
-const labelFor = (t) => eventLabel[t] ?? t.replaceAll("_", " ");
+const labelFor = (t) => EVENT_LABELS[t] ?? t.replaceAll("_", " ");
 
 export default function LogsTableBlock() {
   const { logs, loading, error, refetch } = useLogs(6);
@@ -98,7 +49,7 @@ export default function LogsTableBlock() {
         )}
 
         {logs.map((log) => {
-          const color = eventColor[log.event_type] ?? eventColor.default;
+          const color = EVENT_COLORS[log.event_type] ?? EVENT_COLORS.default;
 
           return (
             <li

@@ -1,10 +1,6 @@
-https://preview--visual-media-command.lovable.app/dashboard/
-
 ```
 admin
 ├─ .env
-├─ design
-│  └─ lista_sitios.png
 ├─ eslint.config.js
 ├─ index.html
 ├─ package-lock.json
@@ -16,12 +12,15 @@ admin
 │  ├─ components
 │  │  ├─ blocks
 │  │  │  ├─ CustomersListBlock.jsx
+│  │  │  ├─ CustomerVideoStatsBlock.jsx
 │  │  │  ├─ DeviceStatisticBlock.jsx
 │  │  │  ├─ SiteListBlock.jsx
 │  │  │  ├─ StatisticsBlock.jsx
 │  │  │  └─ WarningsBlock.jsx
 │  │  ├─ cards
 │  │  │  ├─ CustomerCard.jsx
+│  │  │  ├─ CustomerDetailsCard.jsx
+│  │  │  ├─ CustomerVideoStatsCard.jsx
 │  │  │  ├─ DeviceStatisticCard.jsx
 │  │  │  ├─ SiteCards.jsx
 │  │  │  ├─ StatisticCard.jsx
@@ -42,8 +41,10 @@ admin
 │  │  ├─ tables
 │  │  │  ├─ DevicesTable.jsx
 │  │  │  ├─ LogsTable.jsx
-│  │  │  └─ ui
-│  │  │     └─ DeviceListItem.jsx
+│  │  │  ├─ ui
+│  │  │  │  ├─ DeviceListItem.jsx
+│  │  │  │  └─ VideoListItem.jsx
+│  │  │  └─ VideosTable.jsx
 │  │  └─ ui
 │  │     ├─ ErrorAlert.jsx
 │  │     ├─ Headings.jsx
@@ -60,22 +61,31 @@ admin
 │  │  └─ values.js
 │  ├─ helpers
 │  │  ├─ computeContractActive.js
+│  │  ├─ computeCustomerActive.js
 │  │  ├─ computeSiteStats.js
+│  │  ├─ computeTvAdLoad.js
 │  │  ├─ computeValue.js
 │  │  ├─ deviceMeta.js
 │  │  ├─ deviceStatus.js
 │  │  └─ pickDevice.js
 │  ├─ hooks
 │  │  ├─ useActiveDevices.js
+│  │  ├─ useContractsExpiring.js
 │  │  ├─ useCustomer.js
 │  │  ├─ useCustomersList.js
-│  │  ├─ useCustomersSummary.js
+│  │  ├─ useCustomerStats.js
+│  │  ├─ useCustomerVideos.js
 │  │  ├─ useDevice.js
 │  │  ├─ useDeviceStats.js
+│  │  ├─ useLogs.js
+│  │  ├─ useSite.js
 │  │  ├─ useSiteData.js
 │  │  ├─ useSiteDetailsWithId.js
 │  │  ├─ useSites.js
-│  │  └─ useSiteSummary.js
+│  │  ├─ useSitesSummary.js
+│  │  ├─ useVideo.js
+│  │  ├─ useVideoStats.js
+│  │  └─ useWarningsData.js
 │  ├─ index.css
 │  ├─ layouts
 │  │  └─ Layout.jsx
@@ -88,7 +98,8 @@ admin
 │  │  ├─ customers
 │  │  │  ├─ AddCustomerPage.jsx
 │  │  │  ├─ CustomerPage.jsx
-│  │  │  └─ CustomersPage.jsx
+│  │  │  ├─ CustomersPage.jsx
+│  │  │  └─ EditCustomerPage.jsx
 │  │  ├─ devices
 │  │  │  ├─ AddDevicePage.jsx
 │  │  │  ├─ DevicePage.jsx
@@ -96,10 +107,17 @@ admin
 │  │  ├─ HomePage.jsx
 │  │  ├─ sites
 │  │  │  ├─ AddSitePage.jsx
+│  │  │  ├─ EditSitePage.jsx
 │  │  │  └─ SitePage.jsx
+│  │  ├─ stats
+│  │  │  ├─ InactiveDevicesPage.jsx
+│  │  │  ├─ LogsPage.jsx
+│  │  │  └─ TerminatingContractsPage.jsx
 │  │  └─ videos
-│  │     └─ AddVideoPage.jsx
-│  └─ service
+│  │     ├─ AddVideoPage.jsx
+│  │     └─ EditVideoPage.jsx
+│  └─ services
+│     ├─ logEvent.js
 │     └─ video.js
 └─ vite.config.js
 
