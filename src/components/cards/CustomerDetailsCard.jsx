@@ -91,7 +91,6 @@ const CustomerDetailsCard = ({ customer }) => {
           {contractActive ? "Ativo" : "Inativo"}
         </span>
       </div>
-
       <div className="flex w-full items-start justify-between text-center mt-2 pe-12">
         <InformationColumn
           data={contactInformation}
@@ -107,6 +106,9 @@ const CustomerDetailsCard = ({ customer }) => {
           title={"Informações de Contrato"}
         />
       </div>
+      <p className="mt-2 mb-1 text-start italic text-red-700">
+        {customer.observations}
+      </p>
     </div>
   );
 };
