@@ -1,5 +1,5 @@
 // src/components/devices/ui/DeviceListItem.jsx
-import { Tv2, Power, Cog, Trash2 } from "lucide-react";
+import { Tv2, Power, Cog, Trash2, Eye } from "lucide-react";
 import { useParams, Link } from "react-router-dom";
 import { getDeviceMeta } from "../../../helpers/deviceMeta";
 import { supabase } from "../../../libs/supabase";
@@ -122,6 +122,13 @@ export default function DeviceListItem({ device, onDelete }) {
       </div>
 
       {/* ações */}
+      <Link
+        to={`/sites/${idSite}/devices/${idDevice}/edit`}
+        className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
+        title="Configurar"
+      >
+        <Eye size={16} />
+      </Link>
       <Link
         to={`/sites/${idSite}/devices/${idDevice}/edit`}
         className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"

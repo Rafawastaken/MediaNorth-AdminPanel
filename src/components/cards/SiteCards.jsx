@@ -108,6 +108,9 @@ export default function SiteCard({ site, onRemove }) {
           <Mail size={16} /> {site.contact_email || "—"}
         </li>
       </ul>
+      <p className="my-3 text-center italic text-red-700">
+        {site.observations || "—"}
+      </p>
 
       {/* --- Contrato --- */}
       <div className="mt-5 rounded-lg bg-slate-50 px-4 py-3 text-sm">
@@ -149,14 +152,14 @@ export default function SiteCard({ site, onRemove }) {
           to={`/sites/${site.id}/devices`}
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-gray-200 px-4 py-2 text-sm hover:bg-slate-50"
         >
-          <Eye size={16} /> Ver
+          {/* <Eye size={16} /> Ver
         </Link>
 
         <Link
           to={`/sites/${site.id}/devices`}
           className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-gray-200 px-4 py-2 text-sm hover:bg-slate-50"
-        >
-          <Tv2 size={16} /> TVs
+        > */}
+          <Tv2 size={16} /> Ver Local
         </Link>
 
         <Link

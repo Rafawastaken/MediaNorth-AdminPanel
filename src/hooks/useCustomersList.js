@@ -25,7 +25,8 @@ export function useCustomersList() {
         contract_type,
         contract_value,
         contract_end_date,
-        contract_start_date
+        contract_start_date,
+        observations
       `)
             .order("created_at", { ascending: false });
 

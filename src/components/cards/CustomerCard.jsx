@@ -38,6 +38,8 @@ const CustomerCard = ({ customer, onRemove }) => {
   );
   const contractActive = isContractActive(customer.contract_end_date);
 
+  console.log(customer);
+
   const handleDelete = async () => {
     if (
       !window.confirm(
@@ -121,6 +123,10 @@ const CustomerCard = ({ customer, onRemove }) => {
           <Mail size={16} /> {customer.contact_email || "—"}
         </li>
       </ul>
+
+      <p className="my-3 text-center italic text-red-700">
+        {customer.observations || "—"}
+      </p>
 
       {/* ---- Contrato ---- */}
       <div className="mt-5 rounded-lg bg-slate-50 px-4 py-3 text-sm">

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { HeadingStandard } from "../../components/ui/Headings";
 import Loading from "../../components/ui/Loading";
 import { toast } from "react-hot-toast";
-import { Clock, XCircle } from "lucide-react";
+import { Clock, Eye, XCircle } from "lucide-react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { pt } from "date-fns/locale";
 import { useContractsExpiring } from "../../hooks/useContractsExpiring";
@@ -38,7 +38,15 @@ export default function TerminatingContracts() {
           <span className="font-medium">{c.company_name}</span>
         </div>
         <span className={isExpired ? "text-red-500" : "text-yellow-600"}>
-          {label}
+          <div className="flex items-center gap-3">
+            {label}
+            <a
+              href={`/customers/${c.id}`}
+              className="text-gray-800 p-2 border border-gray-200 rounded-md "
+            >
+              <Eye size={18} />
+            </a>
+          </div>
         </span>
       </li>
     );
