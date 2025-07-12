@@ -1,4 +1,4 @@
-// src/components/devices/ui/DeviceListItemInactive.jsx
+// src/components/devices/ui/DeviceListItem.jsx
 import { Tv2, Power, Cog, Trash2, Eye } from "lucide-react";
 import { useParams, Link } from "react-router-dom";
 import { getDeviceMeta } from "../../../helpers/deviceMeta";
@@ -6,7 +6,7 @@ import { supabase } from "../../../libs/supabase";
 import { logEvent } from "../../../services/logEvent";
 import { toast } from "react-hot-toast";
 
-export default function DeviceListItemInactive({ device, onDelete }) {
+export default function DeviceListItem({ device, onDelete }) {
   /* meta derivada */
   const { online, tempLabel, tempColor, sched, lastSeenStr } =
     getDeviceMeta(device);
@@ -21,8 +21,7 @@ export default function DeviceListItemInactive({ device, onDelete }) {
     active,
   } = device;
 
-  /* id do site vindo da URL para compor a rota */
-  const { idSite } = useParams();
+  console.log(device);
 
   /* handler de delete */
   const handleDelete = async () => {
@@ -123,14 +122,14 @@ export default function DeviceListItemInactive({ device, onDelete }) {
 
       {/* ações */}
       <Link
-        to={`/sites/${idSite}/devices/${idDevice}/edit`}
+        to={`/sites/${device.site_id}/devices/${idDevice}/edit`}
         className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
         title="Configurar"
       >
         <Eye size={16} />
       </Link>
       <Link
-        to={`/sites/${idSite}/devices/${idDevice}/edit`}
+        to={`/sites/${device.site_id}/devices/${idDevice}/edit`}
         className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
         title="Configurar"
       >

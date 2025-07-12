@@ -4,12 +4,11 @@ import { useActiveDevices } from "../../hooks/useActiveDevices";
 import { HeadingStandard } from "../../components/ui/Headings";
 import Loading from "../../components/ui/Loading";
 import { toast } from "react-hot-toast";
-import DeviceListItem from "../../components/tables/ui/DeviceListItem";
+import DeviceListItemInactive from "../../components/tables/ui/DeviceListItemInactive";
 import { isDeviceOnline } from "../../helpers/deviceStatus";
 
 export default function InactiveDevicesPage() {
   const { devices, loading, error, refetch } = useActiveDevices();
-  console.log(devices);
 
   // filtra só os inativos *e* offline
   const offlineInactive = devices.filter(
@@ -39,7 +38,7 @@ export default function InactiveDevicesPage() {
       {offlineInactive.length > 0 ? (
         <div className="flex flex-col gap-3">
           {offlineInactive.map((device) => (
-            <DeviceListItem
+            <DeviceListItemInactive
               key={device.id}
               device={device}
               onDelete={refetch}
