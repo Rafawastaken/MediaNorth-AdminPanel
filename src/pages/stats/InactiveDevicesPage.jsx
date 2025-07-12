@@ -9,6 +9,7 @@ import { isDeviceOnline } from "../../helpers/deviceStatus";
 
 export default function InactiveDevicesPage() {
   const { devices, loading, error, refetch } = useActiveDevices();
+  console.log(devices);
 
   // filtra só os inativos *e* offline
   const offlineInactive = devices.filter(

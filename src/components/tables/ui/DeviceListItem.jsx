@@ -21,9 +21,6 @@ export default function DeviceListItem({ device, onDelete }) {
     active,
   } = device;
 
-  /* id do site vindo da URL para compor a rota */
-  const { idSite } = useParams();
-
   /* handler de delete */
   const handleDelete = async () => {
     if (
@@ -123,14 +120,14 @@ export default function DeviceListItem({ device, onDelete }) {
 
       {/* ações */}
       <Link
-        to={`/sites/${idSite}/devices/${idDevice}/edit`}
+        to={`/sites/${device.site.id}/devices/${idDevice}/edit`}
         className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
         title="Configurar"
       >
         <Eye size={16} />
       </Link>
       <Link
-        to={`/sites/${idSite}/devices/${idDevice}/edit`}
+        to={`/sites/${device.site.id}/devices/${idDevice}/edit`}
         className="rounded-md border border-slate-200 p-2 hover:bg-slate-50"
         title="Configurar"
       >
